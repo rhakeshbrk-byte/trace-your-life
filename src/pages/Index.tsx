@@ -34,7 +34,7 @@ const InsightCard = () => {
   }, []);
 
   return (
-    <div className="glass-card glow-green p-6 col-span-1 md:col-span-2 row-span-1 flex flex-col justify-between">
+    <div className="glass-card glow-green p-6 flex flex-col justify-between h-full">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
         <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Live Insight</span>
@@ -51,7 +51,7 @@ const InsightCard = () => {
 };
 
 const TimelineCard = () => (
-  <div className="glass-card p-6 col-span-1 row-span-1 md:row-span-2 overflow-hidden">
+  <div className="glass-card p-6 overflow-hidden h-full">
     <div className="flex items-center gap-2 mb-5">
       <Clock className="w-4 h-4 text-primary" />
       <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Today's Timeline</span>
@@ -136,7 +136,7 @@ const MemoryCard = () => (
 );
 
 const StatsRow = () => (
-  <div className="glass-card p-6 col-span-1 md:col-span-2 row-span-1">
+  <div className="glass-card p-6 h-full">
     <div className="flex items-center gap-2 mb-4">
       <TrendingUp className="w-4 h-4 text-primary" />
       <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Weekly Patterns</span>
@@ -185,12 +185,22 @@ const Index = () => {
 
       {/* Bento Grid */}
       <main className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
-        <InsightCard />
-        <TimelineCard />
-        <DecisionCard />
-        <SocialCard />
-        <MemoryCard />
-        <StatsRow />
+        {[
+          { card: <InsightCard key="insight" />, className: "col-span-1 md:col-span-2" },
+          { card: <TimelineCard key="timeline" />, className: "col-span-1 row-span-1 md:row-span-2" },
+          { card: <DecisionCard key="decision" />, className: "col-span-1" },
+          { card: <SocialCard key="social" />, className: "col-span-1" },
+          { card: <MemoryCard key="memory" />, className: "col-span-1" },
+          { card: <StatsRow key="stats" />, className: "col-span-1 md:col-span-2" },
+        ].map((item, i) => (
+          <div
+            key={i}
+            className={`opacity-0 animate-fade-in-up ${item.className}`}
+            style={{ animationDelay: `${i * 120}ms` }}
+          >
+            {item.card}
+          </div>
+        ))}
       </main>
 
       {/* Footer */}
