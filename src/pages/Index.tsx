@@ -34,7 +34,7 @@ const InsightCard = () => {
   }, []);
 
   return (
-    <div className="glass-card glow-green p-6 col-span-2 row-span-1 flex flex-col justify-between">
+    <div className="glass-card glow-green p-6 col-span-1 md:col-span-2 row-span-1 flex flex-col justify-between">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
         <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Live Insight</span>
@@ -51,7 +51,7 @@ const InsightCard = () => {
 };
 
 const TimelineCard = () => (
-  <div className="glass-card p-6 col-span-1 row-span-2 overflow-hidden">
+  <div className="glass-card p-6 col-span-1 row-span-1 md:row-span-2 overflow-hidden">
     <div className="flex items-center gap-2 mb-5">
       <Clock className="w-4 h-4 text-primary" />
       <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Today's Timeline</span>
@@ -136,12 +136,12 @@ const MemoryCard = () => (
 );
 
 const StatsRow = () => (
-  <div className="glass-card p-6 col-span-2 row-span-1">
+  <div className="glass-card p-6 col-span-1 md:col-span-2 row-span-1">
     <div className="flex items-center gap-2 mb-4">
       <TrendingUp className="w-4 h-4 text-primary" />
       <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Weekly Patterns</span>
     </div>
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {[
         { label: "Focus hours", value: "18.5h", change: "+2.3h" },
         { label: "Places visited", value: "12", change: "+3" },
