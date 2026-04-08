@@ -185,12 +185,22 @@ const Index = () => {
 
       {/* Bento Grid */}
       <main className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
-        <InsightCard />
-        <TimelineCard />
-        <DecisionCard />
-        <SocialCard />
-        <MemoryCard />
-        <StatsRow />
+        {[
+          <InsightCard key="insight" />,
+          <TimelineCard key="timeline" />,
+          <DecisionCard key="decision" />,
+          <SocialCard key="social" />,
+          <MemoryCard key="memory" />,
+          <StatsRow key="stats" />,
+        ].map((card, i) => (
+          <div
+            key={i}
+            className="opacity-0 animate-fade-in-up"
+            style={{ animationDelay: `${i * 120}ms` }}
+          >
+            {card}
+          </div>
+        ))}
       </main>
 
       {/* Footer */}
