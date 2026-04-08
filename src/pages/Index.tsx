@@ -186,19 +186,19 @@ const Index = () => {
       {/* Bento Grid */}
       <main className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
         {[
-          <InsightCard key="insight" />,
-          <TimelineCard key="timeline" />,
-          <DecisionCard key="decision" />,
-          <SocialCard key="social" />,
-          <MemoryCard key="memory" />,
-          <StatsRow key="stats" />,
-        ].map((card, i) => (
+          { card: <InsightCard key="insight" />, className: "col-span-1 md:col-span-2" },
+          { card: <TimelineCard key="timeline" />, className: "col-span-1 row-span-1 md:row-span-2" },
+          { card: <DecisionCard key="decision" />, className: "col-span-1" },
+          { card: <SocialCard key="social" />, className: "col-span-1" },
+          { card: <MemoryCard key="memory" />, className: "col-span-1" },
+          { card: <StatsRow key="stats" />, className: "col-span-1 md:col-span-2" },
+        ].map((item, i) => (
           <div
             key={i}
-            className="opacity-0 animate-fade-in-up"
+            className={`opacity-0 animate-fade-in-up ${item.className}`}
             style={{ animationDelay: `${i * 120}ms` }}
           >
-            {card}
+            {item.card}
           </div>
         ))}
       </main>
