@@ -141,7 +141,7 @@ const StatsRow = () => (
       <TrendingUp className="w-4 h-4 text-primary" />
       <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Weekly Patterns</span>
     </div>
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {[
         { label: "Focus hours", value: "18.5h", change: "+2.3h" },
         { label: "Places visited", value: "12", change: "+3" },
