@@ -9,12 +9,12 @@ const ContextCard = ({ context }: ContextCardProps) => (
   <div className="glass-card p-4 mx-4 mt-2 mb-3 space-y-3">
     <div className="flex items-center gap-2">
       <Brain className="w-4 h-4 text-secondary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">
+      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Memory Layer
       </span>
     </div>
 
-    <p className="text-sm text-foreground font-body">{context.memoryNote}</p>
+    <p className="text-sm text-foreground">{context.memoryNote}</p>
 
     <div className="flex flex-wrap gap-2">
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -31,7 +31,7 @@ const ContextCard = ({ context }: ContextCardProps) => (
       {context.lastTopics.map((topic) => (
         <span
           key={topic}
-          className="px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-xs text-secondary font-heading"
+          className="px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-xs text-secondary font-medium"
         >
           {topic}
         </span>
