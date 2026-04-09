@@ -1,36 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import { MessageCircle, Brain } from "lucide-react";
+import { Search, Plus } from "lucide-react";
+import { useState } from "react";
 import { conversations } from "@/data/messaging";
 
-const ChatList = () => {
+const Messages = () => {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const filtered = conversations.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/50 px-4 py-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center glow-green">
-              <MessageCircle className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-lg font-heading text-gradient">Messages</h1>
-              <p className="text-[10px] text-muted-foreground font-body">Context-aware conversations</p>
-            </div>
-          </div>
-          <button
-            onClick={() => navigate("/")}
-            className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
-          >
-            <Brain className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
+      <header className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-bold text-foreground">Messages</h1>
+        <button className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+          <Plus className="w-5 h-5 text-primary-foreground" />
+        </button>
       </header>
 
-      {/* Conversation List */}
-      <div className="max-w-2xl mx-auto p-4 space-y-2">
-        {conversations.map((convo, i) => (
+      {/* Search */}
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search conversations..."
+          className="w-full bg-muted border border-border/50 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+        />
+      </div>
+
+      {/* Chat List */}
+      <div className="space-y-2">
+        {filtered.map((convo, i) => (
           <button
             key={convo.id}
             onClick={() => navigate(`/messages/${convo.id}`)}
@@ -39,7 +43,7 @@ const ChatList = () => {
           >
             {/* Avatar */}
             <div
-              className={`w-11 h-11 rounded-full flex items-center justify-center text-sm font-heading shrink-0 ${
+              className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
                 convo.avatarColor === "primary"
                   ? "bg-primary/20 text-primary"
                   : "bg-secondary/20 text-secondary"
@@ -51,17 +55,15 @@ const ChatList = () => {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-0.5">
-                <span className="text-sm font-heading text-foreground">{convo.name}</span>
-                <span className="text-[10px] text-muted-foreground font-heading shrink-0">
-                  {convo.lastMessageTime}
-                </span>
+                <span className="text-sm font-semibold text-foreground">{convo.name}</span>
+                <span className="text-[10px] text-muted-foreground shrink-0">{convo.lastMessageTime}</span>
               </div>
-              <p className="text-xs text-muted-foreground font-body truncate">{convo.lastMessage}</p>
+              <p className="text-xs text-muted-foreground truncate">{convo.lastMessage}</p>
               <div className="flex items-center gap-1.5 mt-1.5">
-                {convo.contextTags.map((tag) => (
+                {convo.contextTags.slice(0, 2).map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted/60 text-muted-foreground font-heading"
+                    className="text-[10px] px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground"
                   >
                     {tag}
                   </span>
@@ -69,10 +71,10 @@ const ChatList = () => {
               </div>
             </div>
 
-            {/* Unread badge */}
+            {/* Unread */}
             {convo.unread > 0 && (
               <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
-                <span className="text-[10px] font-heading text-primary-foreground">{convo.unread}</span>
+                <span className="text-[10px] font-bold text-primary-foreground">{convo.unread}</span>
               </div>
             )}
           </button>
@@ -82,4 +84,4 @@ const ChatList = () => {
   );
 };
 
-export default ChatList;
+export default Messages;

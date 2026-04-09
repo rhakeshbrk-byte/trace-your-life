@@ -1,223 +1,156 @@
-import { Brain, MapPin, Camera, MessageCircle, Clock, Zap, Users, Shield, TrendingUp, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Bell, MapPin, Clock, TrendingUp, Users, Brain, ChevronDown, ChevronUp } from "lucide-react";
 
-const insightMessages = [
-  "You focus best at Blue Bottle Coffee between 4–6 PM",
-  "Last time you met Sarah, you discussed AI startups",
-  "You skipped gym 3 times this week — streak at risk",
-  "This place you're near has 2 friends who rated it ★★★★★",
-  "Your sleep improved 12% since switching to evening walks",
-  "You tend to eat healthier on days you work from home",
+const insightCards = [
+  {
+    title: "You're most productive at 4–6 PM",
+    context: "Based on 3 weeks of focus data",
+    icon: TrendingUp,
+    action: "View patterns",
+    color: "primary",
+  },
+  {
+    title: "2 friends are nearby",
+    context: "Alex Kim is 5 min away • Maya at Sage Kitchen",
+    icon: Users,
+    action: "See who's around",
+    color: "accent",
+  },
+  {
+    title: "You skipped gym twice this week",
+    context: "Your streak is at risk — 3 days left",
+    icon: TrendingUp,
+    action: "Schedule session",
+    color: "secondary",
+  },
+  {
+    title: "This café was rated ★★★★★ by friends",
+    context: "2 people in your circle recommended it",
+    icon: MapPin,
+    action: "View details",
+    color: "primary",
+  },
 ];
 
-const timelineEvents = [
-  { time: "9:15 AM", label: "Arrived at workspace", icon: MapPin, type: "location" },
-  { time: "10:30 AM", label: "Deep focus session — 2h 15m", icon: Brain, type: "pattern" },
-  { time: "12:45 PM", label: "Lunch at Sage Kitchen", icon: TrendingUp, type: "habit" },
-  { time: "2:00 PM", label: "Met with Alex — discussed funding", icon: MessageCircle, type: "social" },
-  { time: "4:30 PM", label: "Creative peak detected", icon: Sparkles, type: "insight" },
+const quickActions = [
+  { label: "Meet", emoji: "🤝" },
+  { label: "Plan", emoji: "📅" },
+  { label: "Ask", emoji: "💬" },
+  { label: "Note", emoji: "📝" },
 ];
 
-const InsightCard = () => {
-  const [currentInsight, setCurrentInsight] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentInsight((prev) => (prev + 1) % insightMessages.length);
-        setIsVisible(true);
-      }, 400);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="glass-card glow-green p-6 flex flex-col justify-between h-full">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Live Insight</span>
-      </div>
-      <p
-        className={`text-lg font-body text-foreground transition-all duration-400 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-        }`}
-      >
-        "{insightMessages[currentInsight]}"
-      </p>
-    </div>
-  );
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good Morning";
+  if (h < 17) return "Good Afternoon";
+  return "Good Evening";
 };
 
-const TimelineCard = () => (
-  <div className="glass-card p-6 overflow-hidden h-full">
-    <div className="flex items-center gap-2 mb-5">
-      <Clock className="w-4 h-4 text-primary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Today's Timeline</span>
-    </div>
-    <div className="space-y-4">
-      {timelineEvents.map((event, i) => (
-        <div key={i} className="flex items-start gap-3 group">
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <event.icon className="w-4 h-4 text-primary" />
-            </div>
-            {i < timelineEvents.length - 1 && <div className="w-px h-6 bg-border mt-1" />}
-          </div>
-          <div className="pt-1">
-            <p className="text-xs text-muted-foreground font-heading">{event.time}</p>
-            <p className="text-sm text-foreground font-body">{event.label}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const DecisionCard = () => (
-  <div className="glass-card glow-purple p-6 col-span-1 row-span-1">
-    <div className="flex items-center gap-2 mb-4">
-      <Zap className="w-4 h-4 text-secondary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Decision Engine</span>
-    </div>
-    <p className="text-sm text-muted-foreground font-body mb-3">Based on your patterns right now:</p>
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors cursor-pointer">
-        <span className="text-sm font-body text-foreground">🍜 Ramen spot — 4 min walk</span>
-      </div>
-      <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors cursor-pointer">
-        <span className="text-sm font-body text-foreground">☕ Focus café — you peak here at 4 PM</span>
-      </div>
-    </div>
-  </div>
-);
-
-const SocialCard = () => (
-  <div className="glass-card p-6 col-span-1 row-span-1">
-    <div className="flex items-center gap-2 mb-4">
-      <Users className="w-4 h-4 text-primary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Nearby</span>
-    </div>
-    <div className="space-y-3">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-heading text-primary">
-          AK
-        </div>
-        <div>
-          <p className="text-sm font-body text-foreground">Alex Kim</p>
-          <p className="text-xs text-muted-foreground">Shares your gym routine</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-xs font-heading text-secondary">
-          MR
-        </div>
-        <div>
-          <p className="text-sm font-body text-foreground">Maya Ross</p>
-          <p className="text-xs text-muted-foreground">~5 min away</p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const MemoryCard = () => (
-  <div className="glass-card p-6 col-span-1 row-span-1">
-    <div className="flex items-center gap-2 mb-4">
-      <Brain className="w-4 h-4 text-secondary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Memory Assist</span>
-    </div>
-    <div className="p-3 rounded-lg bg-secondary/10 border border-secondary/20">
-      <p className="text-xs text-muted-foreground font-heading mb-1">About Alex Kim</p>
-      <p className="text-sm text-foreground font-body">Met at TechCrunch '25. Into startups & fitness. Last chat: Series A fundraising tips.</p>
-    </div>
-  </div>
-);
-
-const StatsRow = () => (
-  <div className="glass-card p-6 h-full">
-    <div className="flex items-center gap-2 mb-4">
-      <TrendingUp className="w-4 h-4 text-primary" />
-      <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Weekly Patterns</span>
-    </div>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {[
-        { label: "Focus hours", value: "18.5h", change: "+2.3h" },
-        { label: "Places visited", value: "12", change: "+3" },
-        { label: "People met", value: "8", change: "−1" },
-        { label: "Decisions helped", value: "23", change: "+7" },
-      ].map((stat, i) => (
-        <div key={i} className="text-center">
-          <p className="text-2xl font-heading text-foreground">{stat.value}</p>
-          <p className="text-xs text-muted-foreground font-body">{stat.label}</p>
-          <p className="text-xs text-primary font-heading mt-1">{stat.change}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const Index = () => {
-  const navigate = useNavigate();
+  const [contextOpen, setContextOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
       {/* Header */}
-      <header className="max-w-6xl mx-auto mb-8 flex items-center justify-between">
+      <header className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center glow-green">
-            <Brain className="w-5 h-5 text-primary" />
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
+            Z
           </div>
           <div>
-            <h1 className="text-xl font-heading text-gradient">Trace</h1>
-            <p className="text-xs text-muted-foreground font-body">Your brain, upgraded</p>
+            <p className="text-base font-bold text-foreground">{getGreeting()}</p>
+            <p className="text-xs text-muted-foreground">Here's what matters now</p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs font-heading text-primary">Tracing</span>
-          </div>
-          <button
-            onClick={() => navigate("/messages")}
-            className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
-          >
-            <MessageCircle className="w-4 h-4 text-muted-foreground" />
-          </button>
-          <button className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
-            <Shield className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
+        <button className="w-10 h-10 rounded-full bg-muted flex items-center justify-center relative">
+          <Bell className="w-5 h-5 text-muted-foreground" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
+        </button>
       </header>
 
-      {/* Bento Grid */}
-      <main className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
-        {[
-          { card: <InsightCard key="insight" />, className: "col-span-1 md:col-span-2" },
-          { card: <TimelineCard key="timeline" />, className: "col-span-1 row-span-1 md:row-span-2" },
-          { card: <DecisionCard key="decision" />, className: "col-span-1" },
-          { card: <SocialCard key="social" />, className: "col-span-1" },
-          { card: <MemoryCard key="memory" />, className: "col-span-1" },
-          { card: <StatsRow key="stats" />, className: "col-span-1 md:col-span-2" },
-        ].map((item, i) => (
+      {/* Insight Cards */}
+      <section className="space-y-3 mb-6">
+        {insightCards.map((card, i) => (
           <div
             key={i}
-            className={`opacity-0 animate-fade-in-up ${item.className}`}
-            style={{ animationDelay: `${i * 120}ms` }}
+            className="glass-card p-4 opacity-0 animate-fade-in-up"
+            style={{ animationDelay: `${i * 100}ms` }}
           >
-            {item.card}
+            <div className="flex items-start gap-3">
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+                card.color === "primary" ? "bg-primary/15" :
+                card.color === "accent" ? "bg-accent/15" : "bg-secondary/15"
+              }`}>
+                <card.icon className={`w-5 h-5 ${
+                  card.color === "primary" ? "text-primary" :
+                  card.color === "accent" ? "text-accent" : "text-secondary"
+                }`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-bold text-foreground mb-0.5">{card.title}</h3>
+                <p className="text-xs text-muted-foreground">{card.context}</p>
+              </div>
+            </div>
+            <button className={`mt-3 text-xs font-semibold px-4 py-2 rounded-full transition-colors ${
+              card.color === "primary" ? "bg-primary/15 text-primary hover:bg-primary/25" :
+              card.color === "accent" ? "bg-accent/15 text-accent hover:bg-accent/25" :
+              "bg-secondary/15 text-secondary hover:bg-secondary/25"
+            }`}>
+              {card.action}
+            </button>
           </div>
         ))}
-      </main>
+      </section>
 
-      {/* Footer */}
-      <footer className="max-w-6xl mx-auto mt-8 text-center">
-        <p className="text-xs text-muted-foreground font-body">
-          <Shield className="w-3 h-3 inline mr-1 -mt-0.5" />
-          All data stays on your device. Zero tracking. Zero ads.
-        </p>
-      </footer>
+      {/* Quick Actions */}
+      <section className="mb-6">
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Quick Actions</h2>
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+          {quickActions.map((a) => (
+            <button
+              key={a.label}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted border border-border/50 text-sm font-medium text-foreground hover:bg-muted/80 transition-colors shrink-0"
+            >
+              <span>{a.emoji}</span>
+              {a.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Context Panel */}
+      <section className="glass-card overflow-hidden">
+        <button
+          onClick={() => setContextOpen(!contextOpen)}
+          className="w-full flex items-center justify-between p-4"
+        >
+          <div className="flex items-center gap-2">
+            <Brain className="w-4 h-4 text-secondary" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Context Panel</span>
+          </div>
+          {contextOpen ? (
+            <ChevronUp className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          )}
+        </button>
+        <div className={`overflow-hidden transition-all duration-300 ease-in-out ${contextOpen ? "max-h-60" : "max-h-0"}`}>
+          <div className="px-4 pb-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span>Downtown — Blue Bottle Coffee area</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="w-4 h-4 text-primary" />
+              <span>Your next free window: 6–8 PM today</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <TrendingUp className="w-4 h-4 text-accent" />
+              <span>Suggestion: Take a 10 min walk — you've been sitting 3h</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
