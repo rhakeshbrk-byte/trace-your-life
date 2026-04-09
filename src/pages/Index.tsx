@@ -1,5 +1,6 @@
 import { Brain, MapPin, Camera, MessageCircle, Clock, Zap, Users, Shield, TrendingUp, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const insightMessages = [
   "You focus best at Blue Bottle Coffee between 4–6 PM",
@@ -159,6 +160,7 @@ const StatsRow = () => (
 );
 
 const Index = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       {/* Header */}
@@ -177,6 +179,12 @@ const Index = () => {
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-xs font-heading text-primary">Tracing</span>
           </div>
+          <button
+            onClick={() => navigate("/messages")}
+            className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+          >
+            <MessageCircle className="w-4 h-4 text-muted-foreground" />
+          </button>
           <button className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
             <Shield className="w-4 h-4 text-muted-foreground" />
           </button>
