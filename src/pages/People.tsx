@@ -32,7 +32,12 @@ const People = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search people..."
-          className="w-full bg-muted border border-border/50 rounded-full pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+          className="w-full rounded-full pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+          style={{
+            background: 'rgba(26, 26, 26, 0.6)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}
         />
       </div>
 
@@ -40,8 +45,8 @@ const People = () => {
         {filtered.map((person, i) => (
           <div
             key={person.id}
-            className="glass-card p-4 flex items-center gap-3 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: `${i * 80}ms` }}
+            className="glass-card p-4 flex items-center gap-3 opacity-0"
+            style={{ animation: `fade-in-up 0.5s ease-out ${i * 80}ms forwards` }}
           >
             <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
               person.color === "primary" ? "bg-primary/20 text-primary" : "bg-secondary/20 text-secondary"
@@ -51,15 +56,15 @@ const People = () => {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground">{person.name}</p>
               <p className="text-xs text-muted-foreground">{person.detail}</p>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground mt-1 inline-block">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary/80 mt-1 inline-block">
                 {person.tag}
               </span>
             </div>
             <button
               onClick={() => navigate(`/messages/${person.id}`)}
-              className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center shrink-0"
+              className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center shrink-0 btn-glow"
             >
-              <MessageCircle className="w-4 h-4 text-primary" />
+              <MessageCircle className="w-4 h-4 text-foreground" />
             </button>
           </div>
         ))}

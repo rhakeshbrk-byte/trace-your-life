@@ -54,7 +54,7 @@ const Index = () => {
       {/* Header */}
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
+          <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-foreground btn-glow">
             Z
           </div>
           <div>
@@ -62,7 +62,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground">Here's what matters now</p>
           </div>
         </div>
-        <button className="w-10 h-10 rounded-full bg-muted flex items-center justify-center relative">
+        <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center relative">
           <Bell className="w-5 h-5 text-muted-foreground" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
         </button>
@@ -73,8 +73,8 @@ const Index = () => {
         {insightCards.map((card, i) => (
           <div
             key={i}
-            className="glass-card p-4 opacity-0 animate-fade-in-up"
-            style={{ animationDelay: `${i * 100}ms` }}
+            className="glass-card p-4 opacity-0"
+            style={{ animation: `fade-in-up 0.5s ease-out ${i * 100}ms forwards` }}
           >
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
@@ -91,10 +91,10 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">{card.context}</p>
               </div>
             </div>
-            <button className={`mt-3 text-xs font-semibold px-4 py-2 rounded-full transition-colors ${
-              card.color === "primary" ? "bg-primary/15 text-primary hover:bg-primary/25" :
-              card.color === "accent" ? "bg-accent/15 text-accent hover:bg-accent/25" :
-              "bg-secondary/15 text-secondary hover:bg-secondary/25"
+            <button className={`mt-3 text-xs font-semibold px-5 py-2 rounded-full transition-all ${
+              card.color === "primary" ? "gradient-primary text-foreground btn-glow" :
+              card.color === "accent" ? "gradient-accent text-foreground" :
+              "bg-secondary/20 text-secondary hover:bg-secondary/30"
             }`}>
               {card.action}
             </button>
@@ -109,7 +109,7 @@ const Index = () => {
           {quickActions.map((a) => (
             <button
               key={a.label}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted border border-border/50 text-sm font-medium text-foreground hover:bg-muted/80 transition-colors shrink-0"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm font-medium text-foreground hover:bg-primary/10 transition-all shrink-0"
             >
               <span>{a.emoji}</span>
               {a.label}
