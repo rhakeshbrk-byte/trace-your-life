@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bell, MapPin, Clock, TrendingUp, Users, Brain, ChevronDown, ChevronUp } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const insightCards = [
   {
@@ -8,6 +10,7 @@ const insightCards = [
     icon: TrendingUp,
     action: "View patterns",
     color: "primary",
+    route: "/trace",
   },
   {
     title: "2 friends are nearby",
@@ -15,6 +18,7 @@ const insightCards = [
     icon: Users,
     action: "See who's around",
     color: "accent",
+    route: "/people",
   },
   {
     title: "You skipped gym twice this week",
@@ -22,6 +26,7 @@ const insightCards = [
     icon: TrendingUp,
     action: "Schedule session",
     color: "secondary",
+    route: null,
   },
   {
     title: "This café was rated ★★★★★ by friends",
@@ -29,14 +34,15 @@ const insightCards = [
     icon: MapPin,
     action: "View details",
     color: "primary",
+    route: null,
   },
 ];
 
 const quickActions = [
-  { label: "Meet", emoji: "🤝" },
-  { label: "Plan", emoji: "📅" },
-  { label: "Ask", emoji: "💬" },
-  { label: "Note", emoji: "📝" },
+  { label: "Meet", emoji: "🤝", route: "/people" },
+  { label: "Plan", emoji: "📅", route: "/trace" },
+  { label: "Ask", emoji: "💬", route: "/messages" },
+  { label: "Note", emoji: "📝", route: null },
 ];
 
 const getGreeting = () => {
@@ -48,21 +54,45 @@ const getGreeting = () => {
 
 const Index = () => {
   const [contextOpen, setContextOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleCardAction = (card: typeof insightCards[0]) => {
+    if (card.route) {
+      navigate(card.route);
+    } else {
+      toast({ title: card.action, description: "This feature is coming soon" });
+    }
+  };
+
+  const handleQuickAction = (action: typeof quickActions[0]) => {
+    if (action.route) {
+      navigate(action.route);
+    } else {
+      toast({ title: `${action.emoji} ${action.label}`, description: "Quick note saved" });
+    }
+  };
 
   return (
     <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
       {/* Header */}
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-foreground btn-glow">
+          <button
+            onClick={() => navigate("/profile")}
+            className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-foreground btn-glow"
+          >
             Z
-          </div>
+          </button>
           <div>
             <p className="text-base font-bold text-foreground">{getGreeting()}</p>
             <p className="text-xs text-muted-foreground">Here's what matters now</p>
           </div>
         </div>
-        <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center relative">
+        <button
+          onClick={() => toast({ title: "No new notifications", description: "You're all caught up" })}
+          className="w-10 h-10 rounded-full glass-card flex items-center justify-center relative"
+        >
           <Bell className="w-5 h-5 text-muted-foreground" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
         </button>
@@ -91,11 +121,14 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">{card.context}</p>
               </div>
             </div>
-            <button className={`mt-3 text-xs font-semibold px-5 py-2 rounded-full transition-all ${
-              card.color === "primary" ? "gradient-primary text-foreground btn-glow" :
-              card.color === "accent" ? "gradient-accent text-foreground" :
-              "bg-secondary/20 text-secondary hover:bg-secondary/30"
-            }`}>
+            <button
+              onClick={() => handleCardAction(card)}
+              className={`mt-3 text-xs font-semibold px-5 py-2 rounded-full transition-all ${
+                card.color === "primary" ? "gradient-primary text-foreground btn-glow" :
+                card.color === "accent" ? "gradient-accent text-foreground" :
+                "bg-secondary/20 text-secondary hover:bg-secondary/30"
+              }`}
+            >
               {card.action}
             </button>
           </div>
@@ -109,6 +142,7 @@ const Index = () => {
           {quickActions.map((a) => (
             <button
               key={a.label}
+              onClick={() => handleQuickAction(a)}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm font-medium text-foreground hover:bg-primary/10 transition-all shrink-0"
             >
               <span>{a.emoji}</span>

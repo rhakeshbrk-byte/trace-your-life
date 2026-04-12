@@ -1,5 +1,6 @@
-import { MapPin, Clock, Camera, Brain, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Brain, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const timelineItems = [
   { time: "9:00 AM", event: "Arrived at workspace", location: "WeWork Downtown", duration: "3h 15m", icon: MapPin },
@@ -14,6 +15,19 @@ const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const Trace = () => {
   const [selectedDay, setSelectedDay] = useState(3);
+  const { toast } = useToast();
+
+  const handlePrev = () => {
+    setSelectedDay((d) => (d > 0 ? d - 1 : 6));
+  };
+
+  const handleNext = () => {
+    setSelectedDay((d) => (d < 6 ? d + 1 : 0));
+  };
+
+  const handleTimelineClick = (item: typeof timelineItems[0]) => {
+    toast({ title: item.event, description: `${item.location} • ${item.duration}` });
+  };
 
   return (
     <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
@@ -22,9 +36,8 @@ const Trace = () => {
         <p className="text-xs text-muted-foreground">Your day, mapped intelligently</p>
       </header>
 
-      {/* Date selector */}
       <div className="flex items-center gap-2 mb-6">
-        <button className="w-8 h-8 rounded-full glass-card flex items-center justify-center">
+        <button onClick={handlePrev} className="w-8 h-8 rounded-full glass-card flex items-center justify-center">
           <ChevronLeft className="w-4 h-4 text-muted-foreground" />
         </button>
         <div className="flex-1 flex gap-1 justify-between">
@@ -42,12 +55,11 @@ const Trace = () => {
             </button>
           ))}
         </div>
-        <button className="w-8 h-8 rounded-full glass-card flex items-center justify-center">
+        <button onClick={handleNext} className="w-8 h-8 rounded-full glass-card flex items-center justify-center">
           <ChevronRight className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
 
-      {/* AI Summary */}
       <div className="glass-card p-4 mb-6 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out forwards' }}>
         <div className="flex items-center gap-2 mb-3">
           <Brain className="w-4 h-4 text-secondary" />
@@ -55,27 +67,27 @@ const Trace = () => {
         </div>
         <p className="text-sm text-foreground font-medium mb-3">Productive day with a good balance of focus and social time.</p>
         <div className="grid grid-cols-3 gap-3">
-          <div className="text-center p-2 rounded-xl" style={{ background: 'rgba(59,130,246,0.1)' }}>
+          <div className="text-center p-2 rounded-xl bg-primary/10">
             <p className="text-lg font-bold text-primary">5.5h</p>
             <p className="text-[10px] text-muted-foreground">Focus</p>
           </div>
-          <div className="text-center p-2 rounded-xl" style={{ background: 'rgba(34,197,94,0.1)' }}>
+          <div className="text-center p-2 rounded-xl bg-accent/10">
             <p className="text-lg font-bold text-accent">1.5h</p>
             <p className="text-[10px] text-muted-foreground">Social</p>
           </div>
-          <div className="text-center p-2 rounded-xl" style={{ background: 'rgba(99,102,241,0.1)' }}>
+          <div className="text-center p-2 rounded-xl bg-secondary/10">
             <p className="text-lg font-bold text-secondary">25m</p>
             <p className="text-[10px] text-muted-foreground">Movement</p>
           </div>
         </div>
       </div>
 
-      {/* Timeline */}
       <section className="space-y-0">
         {timelineItems.map((item, i) => (
-          <div
+          <button
             key={i}
-            className="flex gap-3 opacity-0"
+            onClick={() => handleTimelineClick(item)}
+            className="flex gap-3 opacity-0 w-full text-left"
             style={{ animation: `fade-in-up 0.5s ease-out ${(i + 1) * 80}ms forwards` }}
           >
             <div className="flex flex-col items-center">
@@ -95,7 +107,7 @@ const Trace = () => {
                 <span className="text-xs text-primary font-medium">{item.duration}</span>
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </section>
     </div>
