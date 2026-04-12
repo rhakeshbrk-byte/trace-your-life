@@ -37,13 +37,22 @@ const ChatThread = () => {
   };
 
   return (
-    <div className="h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col relative">
+      {/* Aurora for chat */}
+      <div className="aurora-bg">
+        <div className="aurora-blob" />
+      </div>
+
       {/* Header */}
-      <header className="bg-background/90 backdrop-blur-xl border-b border-border/50 px-4 py-3">
+      <header className="relative z-10 px-4 py-3" style={{
+        background: 'rgba(11, 11, 15, 0.85)',
+        backdropFilter: 'blur(24px)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <button
             onClick={() => navigate("/messages")}
-            className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+            className="w-9 h-9 rounded-full glass-card flex items-center justify-center"
           >
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
@@ -56,17 +65,17 @@ const ChatThread = () => {
               Met at gym • Likes startups
             </p>
           </div>
-          <button className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+          <button className="w-9 h-9 rounded-full glass-card flex items-center justify-center">
             <Phone className="w-4 h-4 text-muted-foreground" />
           </button>
-          <button className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+          <button className="w-9 h-9 rounded-full glass-card flex items-center justify-center">
             <MoreVertical className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </header>
 
       {/* Scrollable */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto relative z-10">
         <div className="max-w-lg mx-auto">
           <ContextCard context={context} />
         </div>
@@ -78,8 +87,12 @@ const ChatThread = () => {
         </div>
       </div>
 
-      {/* Context Suggestions */}
-      <div className="border-t border-border/30 bg-background/80 backdrop-blur-xl">
+      {/* Input area */}
+      <div className="relative z-10" style={{
+        background: 'rgba(11, 11, 15, 0.85)',
+        backdropFilter: 'blur(24px)',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
         <div className="max-w-lg mx-auto flex items-center gap-2 px-4 pt-2 pb-1 overflow-x-auto scrollbar-hide">
           {suggestions.map((s) => (
             <button
@@ -91,10 +104,8 @@ const ChatThread = () => {
             </button>
           ))}
         </div>
-
-        {/* Input */}
         <div className="max-w-lg mx-auto flex items-center gap-2 p-3">
-          <button className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
+          <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0">
             <Plus className="w-5 h-5 text-muted-foreground" />
           </button>
           <input
@@ -102,17 +113,21 @@ const ChatThread = () => {
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Type a message..."
-            className="flex-1 bg-muted border border-border/50 rounded-full px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+            className="flex-1 rounded-full px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+            style={{
+              background: 'rgba(26, 26, 26, 0.6)',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
           />
-          <button className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
+          <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0">
             <Mic className="w-5 h-5 text-muted-foreground" />
           </button>
           <button
             onClick={handleSend}
             disabled={!text.trim()}
-            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity"
+            className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center shrink-0 disabled:opacity-30 transition-all btn-glow"
           >
-            <Send className="w-4 h-4 text-primary-foreground" />
+            <Send className="w-4 h-4 text-foreground" />
           </button>
         </div>
       </div>

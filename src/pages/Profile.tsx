@@ -1,4 +1,4 @@
-import { Shield, MapPin, Brain, Sparkles, ChevronRight, LogOut } from "lucide-react";
+import { Shield, Brain, ChevronRight, LogOut } from "lucide-react";
 import { useState } from "react";
 
 const ToggleRow = ({ label, description, defaultOn = false }: { label: string; description: string; defaultOn?: boolean }) => {
@@ -11,10 +11,15 @@ const ToggleRow = ({ label, description, defaultOn = false }: { label: string; d
       </div>
       <button
         onClick={() => setOn(!on)}
-        className={`w-11 h-6 rounded-full transition-colors relative ${on ? "bg-primary" : "bg-muted"}`}
+        className="w-11 h-6 rounded-full transition-all relative"
+        style={{
+          background: on ? 'linear-gradient(135deg, #6366F1, #3B82F6)' : 'rgba(26, 26, 26, 0.8)',
+          boxShadow: on ? '0 0 12px rgba(99,102,241,0.3)' : 'none',
+        }}
       >
-        <div className={`w-5 h-5 rounded-full bg-foreground absolute top-0.5 transition-transform ${on ? "translate-x-5.5 left-[1px]" : "left-[2px]"}`}
-          style={{ transform: on ? "translateX(22px)" : "translateX(0)" }}
+        <div
+          className="w-5 h-5 rounded-full bg-foreground absolute top-0.5 transition-transform"
+          style={{ transform: on ? "translateX(22px)" : "translateX(2px)" }}
         />
       </button>
     </div>
@@ -29,8 +34,8 @@ const Profile = () => (
     </header>
 
     {/* Personal Info */}
-    <div className="glass-card p-4 mb-4 flex items-center gap-4 opacity-0 animate-fade-in-up">
-      <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-xl font-bold text-primary">
+    <div className="glass-card p-4 mb-4 flex items-center gap-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out forwards' }}>
+      <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-xl font-bold text-foreground btn-glow">
         Z
       </div>
       <div>
@@ -41,12 +46,12 @@ const Profile = () => (
     </div>
 
     {/* Privacy Controls */}
-    <section className="glass-card p-4 mb-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+    <section className="glass-card p-4 mb-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 100ms forwards' }}>
       <div className="flex items-center gap-2 mb-3">
         <Shield className="w-4 h-4 text-accent" />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Privacy Controls</span>
       </div>
-      <div className="divide-y divide-border/30">
+      <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
         <ToggleRow label="Share location" description="Let friends see when you're nearby" defaultOn />
         <ToggleRow label="Memory tracking" description="Build context from your conversations" defaultOn />
         <ToggleRow label="Activity insights" description="Track patterns like focus hours and movement" defaultOn />
@@ -54,12 +59,12 @@ const Profile = () => (
     </section>
 
     {/* AI Settings */}
-    <section className="glass-card p-4 mb-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+    <section className="glass-card p-4 mb-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 200ms forwards' }}>
       <div className="flex items-center gap-2 mb-3">
         <Brain className="w-4 h-4 text-secondary" />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">AI Settings</span>
       </div>
-      <div className="divide-y divide-border/30">
+      <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
         <ToggleRow label="Smart suggestions" description="AI recommends actions based on context" defaultOn />
         <ToggleRow label="Ghost mode replies" description="AI drafts replies you can approve" />
         <ToggleRow label="Voice note summaries" description="Auto-generate text from voice messages" defaultOn />
@@ -67,7 +72,7 @@ const Profile = () => (
     </section>
 
     {/* Sign Out */}
-    <button className="w-full glass-card p-4 flex items-center justify-between opacity-0 animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+    <button className="w-full glass-card p-4 flex items-center justify-between opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 300ms forwards' }}>
       <div className="flex items-center gap-3">
         <LogOut className="w-4 h-4 text-destructive" />
         <span className="text-sm font-medium text-destructive">Sign out</span>

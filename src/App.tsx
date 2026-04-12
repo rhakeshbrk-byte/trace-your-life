@@ -19,16 +19,24 @@ const AppContent = () => {
   const hideNav = location.pathname.startsWith("/messages/");
 
   return (
-    <div className={`min-h-screen bg-background ${hideNav ? "" : "pb-16"}`}>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/messages/:id" element={<ChatThread />} />
-        <Route path="/trace" element={<Trace />} />
-        <Route path="/people" element={<People />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <div className={`min-h-screen bg-background relative ${hideNav ? "" : "pb-20"}`}>
+      {/* Aurora Background */}
+      <div className="aurora-bg">
+        <div className="aurora-blob" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/messages/:id" element={<ChatThread />} />
+          <Route path="/trace" element={<Trace />} />
+          <Route path="/people" element={<People />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
       {!hideNav && <BottomNav />}
     </div>
   );
