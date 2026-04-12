@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { Search, Plus } from "lucide-react";
 import { useState } from "react";
 import { conversations } from "@/data/messaging";
+import { useToast } from "@/hooks/use-toast";
 
 const Messages = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const { toast } = useToast();
 
   const filtered = conversations.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -13,15 +15,16 @@ const Messages = () => {
 
   return (
     <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-      {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-foreground">Messages</h1>
-        <button className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center btn-glow">
+        <button
+          onClick={() => toast({ title: "New conversation", description: "Select a contact from People tab" })}
+          className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center btn-glow"
+        >
           <Plus className="w-5 h-5 text-foreground" />
         </button>
       </header>
 
-      {/* Search */}
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
@@ -37,7 +40,6 @@ const Messages = () => {
         />
       </div>
 
-      {/* Chat List */}
       <div className="space-y-2">
         {filtered.map((convo, i) => (
           <button

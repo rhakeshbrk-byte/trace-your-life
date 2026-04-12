@@ -4,12 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import { chatMessages, contactContexts, aiSuggestions, Message } from "@/data/messaging";
 import ContextCard from "@/components/messaging/ContextCard";
 import MessageBubble from "@/components/messaging/MessageBubble";
+import { useToast } from "@/hooks/use-toast";
 
 const ChatThread = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [text, setText] = useState("");
+  const { toast } = useToast();
 
   const context = contactContexts[id || ""];
   const suggestions = aiSuggestions[id || ""] || [];
@@ -38,12 +40,10 @@ const ChatThread = () => {
 
   return (
     <div className="h-screen bg-background flex flex-col relative">
-      {/* Aurora for chat */}
       <div className="aurora-bg">
         <div className="aurora-blob" />
       </div>
 
-      {/* Header */}
       <header className="relative z-10 px-4 py-3" style={{
         background: 'rgba(11, 11, 15, 0.85)',
         backdropFilter: 'blur(24px)',
@@ -65,16 +65,21 @@ const ChatThread = () => {
               Met at gym • Likes startups
             </p>
           </div>
-          <button className="w-9 h-9 rounded-full glass-card flex items-center justify-center">
+          <button
+            onClick={() => toast({ title: "Calling...", description: `Calling ${context.name}` })}
+            className="w-9 h-9 rounded-full glass-card flex items-center justify-center"
+          >
             <Phone className="w-4 h-4 text-muted-foreground" />
           </button>
-          <button className="w-9 h-9 rounded-full glass-card flex items-center justify-center">
+          <button
+            onClick={() => toast({ title: "Options", description: "Mute, block, or view contact info" })}
+            className="w-9 h-9 rounded-full glass-card flex items-center justify-center"
+          >
             <MoreVertical className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </header>
 
-      {/* Scrollable */}
       <div className="flex-1 overflow-y-auto relative z-10">
         <div className="max-w-lg mx-auto">
           <ContextCard context={context} />
@@ -87,7 +92,6 @@ const ChatThread = () => {
         </div>
       </div>
 
-      {/* Input area */}
       <div className="relative z-10" style={{
         background: 'rgba(11, 11, 15, 0.85)',
         backdropFilter: 'blur(24px)',
@@ -105,7 +109,10 @@ const ChatThread = () => {
           ))}
         </div>
         <div className="max-w-lg mx-auto flex items-center gap-2 p-3">
-          <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0">
+          <button
+            onClick={() => toast({ title: "Attach", description: "Photo, file, or location" })}
+            className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0"
+          >
             <Plus className="w-5 h-5 text-muted-foreground" />
           </button>
           <input
@@ -119,7 +126,10 @@ const ChatThread = () => {
               border: '1px solid rgba(255,255,255,0.06)',
             }}
           />
-          <button className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0">
+          <button
+            onClick={() => toast({ title: "🎤 Recording...", description: "Voice note started" })}
+            className="w-10 h-10 rounded-full glass-card flex items-center justify-center shrink-0"
+          >
             <Mic className="w-5 h-5 text-muted-foreground" />
           </button>
           <button
