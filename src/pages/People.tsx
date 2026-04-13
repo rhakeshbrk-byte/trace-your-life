@@ -32,12 +32,7 @@ const People = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search people..."
-          className="w-full rounded-full pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
-          style={{
-            background: 'rgba(26, 26, 26, 0.6)',
-            backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}
+          className="w-full rounded-full pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground glass-card focus:outline-none focus:ring-1 focus:ring-primary/50"
         />
       </div>
 
@@ -45,10 +40,10 @@ const People = () => {
         {filtered.map((person, i) => (
           <div
             key={person.id}
-            className="glass-card p-4 flex items-center gap-3 opacity-0"
+            className="glass-card-elevated p-4 flex items-center gap-3 opacity-0 group"
             style={{ animation: `fade-in-up 0.5s ease-out ${i * 80}ms forwards` }}
           >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all duration-300 group-hover:scale-110 ${
               person.color === "primary" ? "bg-primary/20 text-primary" : "bg-secondary/20 text-secondary"
             }`}>
               {person.initials}

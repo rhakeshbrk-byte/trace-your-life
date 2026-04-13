@@ -30,11 +30,12 @@ const BottomNav = () => {
             <button
               key={tab.path}
               onClick={() => navigate(tab.path)}
-              className={`flex flex-col items-center gap-0.5 py-1.5 px-3 transition-all duration-300 rounded-2xl ${
-                isActive ? "scale-110" : "scale-100"
+              className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-2xl transition-all duration-300 ${
+                isActive ? "scale-110" : "scale-100 hover:scale-105"
               }`}
               style={isActive ? {
                 background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.1))',
+                boxShadow: '0 0 16px rgba(99,102,241,0.15)',
               } : undefined}
             >
               <tab.icon
@@ -43,7 +44,7 @@ const BottomNav = () => {
                 }`}
               />
               <span
-                className={`text-[10px] font-medium transition-colors ${
+                className={`text-[10px] font-medium transition-colors duration-300 ${
                   isActive ? "text-primary" : "text-muted-foreground"
                 }`}
               >
