@@ -1,39 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, MapPin, Clock, TrendingUp, Users, Brain, ChevronDown, ChevronUp } from "lucide-react";
+import { Bell, MapPin, Clock, TrendingUp, Users, Brain, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const insightCards = [
   {
     title: "You're most productive at 4–6 PM",
     context: "Based on 3 weeks of focus data",
+    detail: "Your deep work sessions average 47 minutes during this window. Consider blocking this time for creative tasks.",
     icon: TrendingUp,
     action: "View patterns",
-    color: "primary",
+    color: "primary" as const,
     route: "/trace",
   },
   {
     title: "2 friends are nearby",
     context: "Alex Kim is 5 min away • Maya at Sage Kitchen",
+    detail: "Alex just finished a workout. Maya has been at Sage Kitchen for 20 minutes. Both are free until 7 PM.",
     icon: Users,
     action: "See who's around",
-    color: "accent",
+    color: "accent" as const,
     route: "/people",
   },
   {
     title: "You skipped gym twice this week",
     context: "Your streak is at risk — 3 days left",
+    detail: "Your usual gym time is 7–8 AM. Tomorrow has a clear morning slot. Want to schedule it?",
     icon: TrendingUp,
     action: "Schedule session",
-    color: "secondary",
+    color: "secondary" as const,
     route: null,
   },
   {
     title: "This café was rated ★★★★★ by friends",
     context: "2 people in your circle recommended it",
+    detail: "Maya and Jordan both visited Blue Bottle last week and rated it 5 stars. It's 3 minutes from your current location.",
     icon: MapPin,
     action: "View details",
-    color: "primary",
+    color: "primary" as const,
     route: null,
   },
 ];
@@ -54,10 +58,12 @@ const getGreeting = () => {
 
 const Index = () => {
   const [contextOpen, setContextOpen] = useState(false);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleCardAction = (card: typeof insightCards[0]) => {
+  const handleCardAction = (card: typeof insightCards[0], e: React.MouseEvent) => {
+    e.stopPropagation();
     if (card.route) {
       navigate(card.route);
     } else {
@@ -71,6 +77,10 @@ const Index = () => {
     } else {
       toast({ title: `${action.emoji} ${action.label}`, description: "Quick note saved" });
     }
+  };
+
+  const toggleCard = (i: number) => {
+    setExpandedCard(expandedCard === i ? null : i);
   };
 
   return (
@@ -91,46 +101,58 @@ const Index = () => {
         </div>
         <button
           onClick={() => toast({ title: "No new notifications", description: "You're all caught up" })}
-          className="w-10 h-10 rounded-full glass-card flex items-center justify-center relative"
+          className="w-10 h-10 rounded-full btn-glass flex items-center justify-center relative"
         >
           <Bell className="w-5 h-5 text-muted-foreground" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" style={{ animation: 'glow-breathe 2s ease-in-out infinite' }} />
         </button>
       </header>
 
-      {/* Insight Cards */}
+      {/* Insight Cards — expandable */}
       <section className="space-y-3 mb-6">
         {insightCards.map((card, i) => (
           <div
             key={i}
-            className="glass-card p-4 opacity-0"
+            onClick={() => toggleCard(i)}
+            className="glass-card-elevated p-4 cursor-pointer opacity-0 expand-card"
             style={{ animation: `fade-in-up 0.5s ease-out ${i * 100}ms forwards` }}
           >
             <div className="flex items-start gap-3">
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                 card.color === "primary" ? "bg-primary/15" :
                 card.color === "accent" ? "bg-accent/15" : "bg-secondary/15"
-              }`}>
-                <card.icon className={`w-5 h-5 ${
+              } ${expandedCard === i ? "scale-110" : ""}`}>
+                <card.icon className={`w-5 h-5 transition-all duration-300 ${
                   card.color === "primary" ? "text-primary" :
                   card.color === "accent" ? "text-accent" : "text-secondary"
-                }`} />
+                } ${expandedCard === i ? "drop-shadow-[0_0_6px_currentColor]" : ""}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-bold text-foreground mb-0.5">{card.title}</h3>
                 <p className="text-xs text-muted-foreground">{card.context}</p>
               </div>
+              <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-300 ${expandedCard === i ? "rotate-180" : ""}`} />
             </div>
-            <button
-              onClick={() => handleCardAction(card)}
-              className={`mt-3 text-xs font-semibold px-5 py-2 rounded-full transition-all ${
-                card.color === "primary" ? "gradient-primary text-foreground btn-glow" :
-                card.color === "accent" ? "gradient-accent text-foreground" :
-                "bg-secondary/20 text-secondary hover:bg-secondary/30"
-              }`}
-            >
-              {card.action}
-            </button>
+
+            {/* Expanded content */}
+            <div className={`transition-all duration-400 ease-in-out overflow-hidden ${expandedCard === i ? "max-h-40 opacity-100 mt-3" : "max-h-0 opacity-0"}`}>
+              <div className="pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-start gap-2 mb-3">
+                  <Sparkles className="w-3.5 h-3.5 text-secondary shrink-0 mt-0.5" />
+                  <p className="text-xs text-muted-foreground leading-relaxed">{card.detail}</p>
+                </div>
+                <button
+                  onClick={(e) => handleCardAction(card, e)}
+                  className={`text-xs font-semibold px-5 py-2 rounded-full transition-all ${
+                    card.color === "primary" ? "gradient-primary text-foreground btn-glow" :
+                    card.color === "accent" ? "gradient-accent text-foreground btn-glow" :
+                    "bg-secondary/20 text-secondary hover:bg-secondary/30"
+                  }`}
+                >
+                  {card.action}
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </section>
@@ -143,7 +165,7 @@ const Index = () => {
             <button
               key={a.label}
               onClick={() => handleQuickAction(a)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm font-medium text-foreground hover:bg-primary/10 transition-all shrink-0"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-card text-sm font-medium text-foreground pill-interactive shrink-0"
             >
               <span>{a.emoji}</span>
               {a.label}
@@ -153,7 +175,7 @@ const Index = () => {
       </section>
 
       {/* Context Panel */}
-      <section className="glass-card overflow-hidden">
+      <section className="glass-card-elevated overflow-hidden">
         <button
           onClick={() => setContextOpen(!contextOpen)}
           className="w-full flex items-center justify-between p-4"
@@ -163,12 +185,12 @@ const Index = () => {
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Context Panel</span>
           </div>
           {contextOpen ? (
-            <ChevronUp className="w-4 h-4 text-muted-foreground" />
+            <ChevronUp className="w-4 h-4 text-muted-foreground transition-transform" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform" />
           )}
         </button>
-        <div className={`overflow-hidden transition-all duration-300 ease-in-out ${contextOpen ? "max-h-60" : "max-h-0"}`}>
+        <div className={`transition-all duration-400 ease-in-out ${contextOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="px-4 pb-4 space-y-3">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="w-4 h-4 text-primary" />

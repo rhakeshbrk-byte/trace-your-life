@@ -20,9 +20,10 @@ const AppContent = () => {
 
   return (
     <div className={`min-h-screen bg-background relative ${hideNav ? "" : "pb-20"}`}>
-      {/* Aurora Background */}
+      {/* Multi-layer Aurora Background */}
       <div className="aurora-bg">
         <div className="aurora-blob" />
+        <div className="aurora-blob-secondary" />
       </div>
 
       {/* Content */}
