@@ -1,14 +1,15 @@
+import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BottomNav from "@/components/layout/BottomNav";
+import PostModal from "@/components/PostModal";
 import Index from "./pages/Index";
+import Rooms from "./pages/Rooms";
 import Messages from "./pages/Messages";
 import ChatThread from "./pages/ChatThread";
-import Trace from "./pages/Trace";
-import People from "./pages/People";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -17,28 +18,26 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   const location = useLocation();
   const hideNav = location.pathname.startsWith("/messages/");
+  const [postOpen, setPostOpen] = useState(false);
 
   return (
     <div className={`min-h-screen bg-background relative ${hideNav ? "" : "pb-20"}`}>
-      {/* Multi-layer Aurora Background */}
       <div className="aurora-bg">
         <div className="aurora-blob" />
         <div className="aurora-blob-secondary" />
       </div>
-
-      {/* Content */}
       <div className="relative z-10">
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/rooms" element={<Rooms />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/messages/:id" element={<ChatThread />} />
-          <Route path="/trace" element={<Trace />} />
-          <Route path="/people" element={<People />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-      {!hideNav && <BottomNav />}
+      {!hideNav && <BottomNav onPostClick={() => setPostOpen(true)} />}
+      <PostModal open={postOpen} onClose={() => setPostOpen(false)} />
     </div>
   );
 };
