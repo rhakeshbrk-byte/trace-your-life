@@ -1,15 +1,19 @@
-import { Home, MessageCircle, Activity, Users, User } from "lucide-react";
+import { Home, MessageCircle, Users, User, Plus } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const tabs = [
   { icon: Home, label: "Home", path: "/" },
-  { icon: MessageCircle, label: "Messages", path: "/messages" },
-  { icon: Activity, label: "Trace", path: "/trace" },
-  { icon: Users, label: "People", path: "/people" },
+  { icon: Users, label: "Rooms", path: "/rooms" },
+  { icon: Plus, label: "Post", path: "__post__" },
+  { icon: MessageCircle, label: "Chat", path: "/messages" },
   { icon: User, label: "Profile", path: "/profile" },
 ];
 
-const BottomNav = () => {
+interface BottomNavProps {
+  onPostClick?: () => void;
+}
+
+const BottomNav = ({ onPostClick }: BottomNavProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,7 +29,21 @@ const BottomNav = () => {
     }}>
       <div className="max-w-lg mx-auto flex items-center justify-around py-2 px-4">
         {tabs.map((tab) => {
-          const isActive = location.pathname === tab.path;
+          const isPost = tab.path === "__post__";
+          const isActive = !isPost && location.pathname === tab.path;
+
+          if (isPost) {
+            return (
+              <button
+                key="post"
+                onClick={onPostClick}
+                className="w-12 h-12 -mt-6 rounded-full flex items-center justify-center gradient-primary btn-glow fab-pulse"
+              >
+                <Plus className="w-6 h-6 text-primary-foreground" />
+              </button>
+            );
+          }
+
           return (
             <button
               key={tab.path}
