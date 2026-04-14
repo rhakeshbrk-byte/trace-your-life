@@ -205,6 +205,14 @@
   .message-bubble-enter {
     animation: msg-enter 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+
+  .haptic-press {
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .haptic-press:active {
+    transform: scale(0.95);
+  }
 }
 
 /* Aurora background — 3 layers */
