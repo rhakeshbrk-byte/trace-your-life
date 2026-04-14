@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BottomNav from "@/components/layout/BottomNav";
 import PostModal from "@/components/PostModal";
+import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import Rooms from "./pages/Rooms";
 import Messages from "./pages/Messages";
@@ -27,14 +28,16 @@ const AppContent = () => {
         <div className="aurora-blob-secondary" />
       </div>
       <div className="relative z-10">
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/rooms" element={<Rooms />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/messages/:id" element={<ChatThread />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <PageTransition locationKey={location.pathname}>
+          <Routes location={location}>
+            <Route path="/" element={<Index />} />
+            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:id" element={<ChatThread />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </PageTransition>
       </div>
       {!hideNav && <BottomNav onPostClick={() => setPostOpen(true)} />}
       <PostModal open={postOpen} onClose={() => setPostOpen(false)} />

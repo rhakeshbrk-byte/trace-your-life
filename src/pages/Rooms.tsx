@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowLeft, Send, Timer, Users, Mic, Image } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, Send, Timer, Users, Mic, MicOff, Image, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const rooms = [
@@ -21,16 +21,48 @@ const roomMessages = [
 const Rooms = () => {
   const [activeRoom, setActiveRoom] = useState<number | null>(null);
   const [msg, setMsg] = useState("");
+  const [msgs, setMsgs] = useState(roomMessages);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordTime, setRecordTime] = useState(0);
+  const recordRef = useRef<NodeJS.Timeout | null>(null);
+  const endRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [msgs]);
+
+  const sendMsg = () => {
+    if (!msg.trim()) return;
+    setMsgs(prev => [...prev, { id: prev.length + 1, text: msg.trim(), timeAgo: "now", isMe: true }]);
+    setMsg("");
+  };
+
+  const startRecording = () => {
+    setIsRecording(true);
+    setRecordTime(0);
+    recordRef.current = setInterval(() => setRecordTime(p => p + 1), 1000);
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    if (recordRef.current) clearInterval(recordRef.current);
+    setMsgs(prev => [...prev, { id: prev.length + 1, text: `🎙️ Voice note — ${recordTime}s`, timeAgo: "now", isMe: true }]);
+    setRecordTime(0);
+  };
+
+  const sendImage = () => {
+    setMsgs(prev => [...prev, { id: prev.length + 1, text: "📷 Photo", timeAgo: "now", isMe: true }]);
+    toast({ title: "Photo sent" });
+  };
 
   const room = rooms.find(r => r.id === activeRoom);
 
   if (activeRoom && room) {
     return (
       <div className="flex flex-col h-[calc(100vh-5rem)] max-w-lg mx-auto">
-        {/* Room Header */}
         <header className="flex items-center gap-3 px-4 py-3 glass-card-strong">
-          <button onClick={() => setActiveRoom(null)} className="p-1.5 rounded-full btn-glass">
+          <button onClick={() => setActiveRoom(null)} className="p-1.5 rounded-full btn-glass haptic-press">
             <ArrowLeft className="w-5 h-5 text-muted-foreground" />
           </button>
           <div className="flex-1">
@@ -43,10 +75,9 @@ const Rooms = () => {
           </div>
         </header>
 
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 scrollbar-hide">
-          {roomMessages.map((m) => (
-            <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}>
+          {msgs.map((m) => (
+            <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"} message-bubble-enter`}>
               <div className={`max-w-[75%] px-3.5 py-2.5 rounded-2xl text-sm ${
                 m.isMe
                   ? "gradient-primary text-foreground rounded-br-md"
@@ -57,26 +88,41 @@ const Rooms = () => {
               </div>
             </div>
           ))}
+          <div ref={endRef} />
         </div>
 
-        {/* Input */}
+        {isRecording && (
+          <div className="px-4 py-2 glass-card-strong flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-destructive" style={{ animation: 'glow-breathe 1s ease-in-out infinite' }} />
+              <span className="text-xs text-foreground">Recording... {recordTime}s</span>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => { setIsRecording(false); if (recordRef.current) clearInterval(recordRef.current); }} className="w-8 h-8 rounded-full btn-glass flex items-center justify-center"><X className="w-4 h-4 text-muted-foreground" /></button>
+              <button onClick={stopRecording} className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center"><Send className="w-3.5 h-3.5 text-foreground" /></button>
+            </div>
+          </div>
+        )}
+
         <div className="px-4 py-3 glass-card-strong">
           <div className="flex items-center gap-2">
-            <button onClick={() => toast({ title: "Coming soon" })} className="p-2 rounded-full btn-glass">
+            <button onClick={sendImage} className="p-2 rounded-full btn-glass haptic-press">
               <Image className="w-4 h-4 text-muted-foreground" />
             </button>
             <input
               value={msg}
               onChange={(e) => setMsg(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && sendMsg()}
               placeholder="Say something..."
               className="flex-1 bg-muted/30 rounded-full px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border/50 focus:border-primary/50 transition-colors"
             />
-            <button onClick={() => toast({ title: "Coming soon" })} className="p-2 rounded-full btn-glass">
-              <Mic className="w-4 h-4 text-muted-foreground" />
+            <button onClick={isRecording ? stopRecording : startRecording} className={`p-2 rounded-full haptic-press ${isRecording ? "gradient-primary btn-glow" : "btn-glass"}`}>
+              {isRecording ? <MicOff className="w-4 h-4 text-foreground" /> : <Mic className="w-4 h-4 text-muted-foreground" />}
             </button>
             <button
-              onClick={() => { if (msg.trim()) { toast({ title: "Sent!" }); setMsg(""); } }}
-              className="p-2 rounded-full gradient-primary btn-glow"
+              onClick={sendMsg}
+              disabled={!msg.trim()}
+              className="p-2 rounded-full gradient-primary btn-glow disabled:opacity-30 haptic-press"
             >
               <Send className="w-4 h-4 text-primary-foreground" />
             </button>
@@ -93,13 +139,12 @@ const Rooms = () => {
         <p className="text-xs text-muted-foreground">24h spaces. No history. Just vibes.</p>
       </header>
 
-      {/* Room Bubbles */}
       <div className="flex gap-4 overflow-x-auto scrollbar-hide mb-6 -mx-1 px-1 py-2">
         {rooms.map((r, i) => (
           <button
             key={r.id}
             onClick={() => setActiveRoom(r.id)}
-            className="flex flex-col items-center gap-2 shrink-0 opacity-0"
+            className="flex flex-col items-center gap-2 shrink-0 opacity-0 haptic-press"
             style={{ animation: `fade-in-up 0.4s ease-out ${i * 60}ms forwards` }}
           >
             <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${r.gradient} flex items-center justify-center text-2xl relative pill-interactive`}>
@@ -113,14 +158,13 @@ const Rooms = () => {
         ))}
       </div>
 
-      {/* Room List */}
       <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Active Rooms</h2>
       <section className="space-y-2">
         {rooms.map((r, i) => (
           <button
             key={r.id}
             onClick={() => setActiveRoom(r.id)}
-            className="w-full glass-card-elevated p-4 flex items-center gap-3 text-left opacity-0"
+            className="w-full glass-card-elevated p-4 flex items-center gap-3 text-left opacity-0 haptic-press"
             style={{ animation: `fade-in-up 0.4s ease-out ${i * 60 + 200}ms forwards` }}
           >
             <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${r.gradient} flex items-center justify-center text-lg shrink-0`}>
