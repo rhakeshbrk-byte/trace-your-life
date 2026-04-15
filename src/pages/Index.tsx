@@ -59,6 +59,7 @@ const moodColors: Record<string, string> = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeMood, setActiveMood] = useState("All");
   const [reacted, setReacted] = useState<Set<number>>(new Set());
   const [posts, setPosts] = useState<Post[]>(initialPosts);
