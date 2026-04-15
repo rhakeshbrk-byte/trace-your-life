@@ -250,6 +250,7 @@ const Index = () => {
 
       {/* Mood Filter */}
       {!showRealTalk && (
+        <>
           <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-5 -mx-1 px-1">
             {moods.map((m) => (
               <button
