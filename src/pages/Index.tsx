@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Heart, MessageSquare, Eye, EyeOff, Sparkles, Send, Bell, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Heart, MessageSquare, Eye, EyeOff, Sparkles, Send, Bell, X, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const moods = [
