@@ -12,6 +12,9 @@ import Rooms from "./pages/Rooms";
 import Messages from "./pages/Messages";
 import ChatThread from "./pages/ChatThread";
 import Profile from "./pages/Profile";
+import Mirror from "./pages/Mirror";
+import EchoChain from "./pages/EchoChain";
+import Signal from "./pages/Signal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +38,9 @@ const AppContent = () => {
             <Route path="/messages" element={<Messages />} />
             <Route path="/messages/:id" element={<ChatThread />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/mirror" element={<Mirror />} />
+            <Route path="/echo" element={<EchoChain />} />
+            <Route path="/signal" element={<Signal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PageTransition>

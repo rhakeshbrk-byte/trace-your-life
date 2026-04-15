@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Heart, MessageSquare, Eye, EyeOff, Sparkles, Send, Bell, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Heart, MessageSquare, Eye, EyeOff, Sparkles, Send, Bell, X, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const moods = [
@@ -58,6 +59,7 @@ const moodColors: Record<string, string> = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeMood, setActiveMood] = useState("All");
   const [reacted, setReacted] = useState<Set<number>>(new Set());
   const [posts, setPosts] = useState<Post[]>(initialPosts);
@@ -216,6 +218,31 @@ const Index = () => {
                   </div>
                 )}
               </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Discover Features */}
+      {!showRealTalk && (
+        <section className="mb-5 opacity-0" style={{ animation: 'fade-in-up 0.4s ease-out forwards' }}>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 block">✨ Discover</span>
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1">
+            {[
+              { label: "Mirror", emoji: "🪞", desc: "See how others see you", path: "/mirror", gradient: "from-indigo-500/20 to-purple-500/20" },
+              { label: "Echo Chain", emoji: "🔗", desc: "Pass thoughts forward", path: "/echo", gradient: "from-emerald-500/20 to-teal-500/20" },
+              { label: "Signal", emoji: "⚡", desc: "15 min live window", path: "/signal", gradient: "from-orange-500/20 to-red-500/20" },
+            ].map((item, i) => (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className="glass-card-elevated p-3 min-w-[130px] text-left shrink-0 haptic-press opacity-0"
+                style={{ animation: `fade-in-up 0.3s ease-out ${i * 60}ms forwards` }}
+              >
+                <span className="text-xl block mb-1">{item.emoji}</span>
+                <p className="text-xs font-semibold text-foreground">{item.label}</p>
+                <p className="text-[9px] text-muted-foreground">{item.desc}</p>
+              </button>
             ))}
           </div>
         </section>
