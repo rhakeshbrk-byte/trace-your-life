@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Mirror from "./pages/Mirror";
 import EchoChain from "./pages/EchoChain";
 import Signal from "./pages/Signal";
+import Pulse from "./pages/Pulse";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const AppContent = () => {
             <Route path="/mirror" element={<Mirror />} />
             <Route path="/echo" element={<EchoChain />} />
             <Route path="/signal" element={<Signal />} />
+            <Route path="/pulse" element={<Pulse />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PageTransition>
