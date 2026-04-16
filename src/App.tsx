@@ -42,6 +42,7 @@ const AppContent = () => {
             <Route path="/mirror" element={<Mirror />} />
             <Route path="/echo" element={<EchoChain />} />
             <Route path="/signal" element={<Signal />} />
+            <Route path="/pulse" element={<Pulse />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PageTransition>

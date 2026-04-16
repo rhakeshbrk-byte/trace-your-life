@@ -232,6 +232,7 @@ const Index = () => {
               { label: "Mirror", emoji: "🪞", desc: "See how others see you", path: "/mirror", gradient: "from-indigo-500/20 to-purple-500/20" },
               { label: "Echo Chain", emoji: "🔗", desc: "Pass thoughts forward", path: "/echo", gradient: "from-emerald-500/20 to-teal-500/20" },
               { label: "Signal", emoji: "⚡", desc: "15 min live window", path: "/signal", gradient: "from-orange-500/20 to-red-500/20" },
+              { label: "Pulse", emoji: "💫", desc: "Quiet emotional stream", path: "/pulse", gradient: "from-violet-500/20 to-fuchsia-500/20" },
             ].map((item, i) => (
               <button
                 key={item.path}
