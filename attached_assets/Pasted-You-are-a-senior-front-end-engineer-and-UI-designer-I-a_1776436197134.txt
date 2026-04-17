@@ -1,0 +1,173 @@
+You are a senior front-end engineer and UI designer.
+
+I already have an existing HTML/CSS/JavaScript project for my app. Your task is to EDIT and UPGRADE the current project — do NOT rebuild from scratch unless necessary.
+
+App name must be changed everywhere to:
+
+StarDust
+
+---
+
+🎯 MAIN OBJECTIVE
+
+Transform the current project into a premium, fully responsive, polished product.
+
+Fix weak UI, broken layouts, non-working buttons, and poor responsiveness.
+
+Keep the existing structure where possible, but improve everything professionally.
+
+---
+
+📱 RESPONSIVE DESIGN (VERY IMPORTANT)
+
+Make the full project responsive for:
+
+1. Mobile phones (320px–480px)
+2. Tablets (481px–768px)
+3. Laptops (769px–1200px)
+4. Desktop (1200px+)
+
+Use:
+
+- Media queries
+- Flexbox
+- CSS Grid
+
+Fix:
+
+- Overflow issues
+- Misaligned elements
+- Tiny buttons
+- Text too large/small
+- Broken spacing
+- Sections going outside screen
+
+Mobile first approach.
+
+---
+
+🎨 VISUAL UPGRADE
+
+Use premium dark theme with soft gradient + aurora glow.
+
+Background:
+#0B0B0F
+
+Aurora colors:
+
+- Indigo #6366F1
+- Purple #8B5CF6
+- Blue #3B82F6
+- Teal #14B8A6
+
+Use:
+
+- Blurred gradient glow layers
+- Glassmorphism cards
+- Smooth shadows
+- Better typography
+- Better spacing
+- Rounded modern buttons
+
+---
+
+🔘 FIX ALL BUTTONS
+
+Every button must work properly.
+
+Check and fix:
+
+- Navigation buttons
+- Open/close modals
+- Chat buttons
+- Pulse buttons
+- Forms
+- Toggle buttons
+
+Use:
+addEventListener()
+
+No dead buttons.
+
+---
+
+🧭 NAVIGATION UPGRADE
+
+Mobile:
+
+- Bottom nav bar
+
+Tablet/Desktop:
+
+- Left sidebar
+
+Auto switch based on screen width.
+
+Active tab:
+
+- glow highlight
+- smooth transition
+
+---
+
+🌌 PULSE MODE UPGRADE
+
+Improve Pulse screen:
+
+- Full responsive layout
+- Better centered content
+- Hold to Continue works smoothly
+- Progress bar aligned
+- Mood selector clean UI
+- Better transitions
+
+---
+
+⚡ PERFORMANCE FIXES
+
+- Optimize animations
+- Remove laggy effects
+- Clean CSS
+- Reuse classes
+- Improve JS logic
+
+---
+
+🧼 CLEAN CODE
+
+Refactor current code:
+
+- organize CSS
+- remove duplicate styles
+- clean JS functions
+- semantic HTML
+
+---
+
+🧱 OUTPUT RULES
+
+Return the FULL edited code.
+
+Do not explain only.
+Actually fix and rewrite the project professionally.
+
+---
+
+🚫 DO NOT
+
+- Do not make it basic
+- Do not remove main features
+- Do not break functionality
+- Do not ignore responsiveness
+
+---
+
+✅ FINAL RESULT
+
+The project should feel like a real startup product called StarDust:
+
+Modern
+Smooth
+Responsive
+Premium
+Functional

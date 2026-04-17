@@ -192,11 +192,11 @@ const Profile = () => {
       {/* Profile card */}
       <div className="glass-card-elevated p-4 mb-4 flex items-center gap-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out forwards' }}>
         <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-xl font-bold text-foreground btn-glow">
-          Z
+          ✦
         </div>
         <div>
-          <p className="text-base font-bold text-foreground">Zentro User</p>
-          <p className="text-xs text-muted-foreground">zentro@example.com</p>
+          <p className="text-base font-bold text-foreground">StarDust User</p>
+          <p className="text-xs text-muted-foreground">user@stardust.app</p>
           <button
             onClick={() => toast({ title: "Edit profile", description: "Profile editing coming soon" })}
             className="text-xs text-primary font-medium mt-1 transition-all hover:text-secondary"

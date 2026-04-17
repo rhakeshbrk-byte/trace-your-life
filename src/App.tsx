@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BottomNav from "@/components/layout/BottomNav";
+import Sidebar from "@/components/layout/Sidebar";
 import PostModal from "@/components/PostModal";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
@@ -26,12 +27,18 @@ const AppContent = () => {
   const [postOpen, setPostOpen] = useState(false);
 
   return (
-    <div className={`min-h-screen bg-background relative ${hideNav ? "" : "pb-20"}`}>
+    <div className="min-h-screen bg-background relative flex">
+      {/* Aurora background */}
       <div className="aurora-bg">
         <div className="aurora-blob" />
         <div className="aurora-blob-secondary" />
       </div>
-      <div className="relative z-10">
+
+      {/* Sidebar — visible on md+ */}
+      {!hideNav && <Sidebar onPostClick={() => setPostOpen(true)} />}
+
+      {/* Main content area */}
+      <div className={`flex-1 relative z-10 min-h-screen ${!hideNav ? "pb-20 md:pb-0" : ""} md:overflow-y-auto`}>
         <PageTransition locationKey={location.pathname}>
           <Routes location={location}>
             <Route path="/" element={<Index />} />
@@ -47,6 +54,8 @@ const AppContent = () => {
           </Routes>
         </PageTransition>
       </div>
+
+      {/* Bottom nav — visible on mobile only */}
       {!hideNav && <BottomNav onPostClick={() => setPostOpen(true)} />}
       <PostModal open={postOpen} onClose={() => setPostOpen(false)} />
     </div>

@@ -20,7 +20,7 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
   if (location.pathname.startsWith("/messages/")) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50" style={{
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={{
       background: 'rgba(11, 11, 15, 0.85)',
       backdropFilter: 'blur(24px)',
       WebkitBackdropFilter: 'blur(24px)',

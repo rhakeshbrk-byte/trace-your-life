@@ -113,7 +113,7 @@ const Index = () => {
       {/* Header */}
       <header className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-lg font-bold text-foreground">Zentro</h1>
+          <h1 className="text-lg font-bold text-foreground">StarDust</h1>
           <p className="text-xs text-muted-foreground">Express yourself freely</p>
         </div>
         <div className="flex items-center gap-2">

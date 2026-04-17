@@ -1,0 +1,230 @@
+UPDATE the existing project by redesigning and upgrading the feature called Pulse.
+
+Pulse is the main short-content experience inside StarDust.
+
+It should use the familiarity of Reels / Shorts style interaction, but feel unique to StarDust through mood-based personalization, soft premium visuals, and healthier engagement design.
+
+Do NOT remove existing app structure. Only enhance and modernize Pulse.
+
+---
+
+🎯 CORE IDEA
+
+Pulse = short vertical content stream where users discover real moments based on mood.
+
+This should feel:
+
+- addictive
+- smooth
+- premium
+- emotional
+- modern
+
+Not like a cheap TikTok clone.
+
+---
+
+📱 PULSE LAYOUT
+
+Create a full-screen vertical immersive page.
+
+Structure:
+
+Top:
+
+- App logo / Pulse title
+- Current selected mood
+- Change mood button
+
+Center:
+
+- Full-screen vertical content card/video area
+
+Right side overlay:
+
+- React button
+- Save button
+- Share button
+- Profile avatar (optional)
+
+Bottom:
+
+- Caption / short text
+- Mood tag
+- Audio / clip label
+- Progress indicator
+
+---
+
+🎭 MOOD SYSTEM (IMPORTANT)
+
+Before entering Pulse, user selects mood:
+
+- Grinding
+- Lost
+- Healing
+- Hyped
+- Creative
+- Chill
+
+Pulse content should visually adapt to mood:
+
+Grinding:
+
+- sharper blue tones
+
+Lost:
+
+- soft indigo haze
+
+Healing:
+
+- teal calming glow
+
+Hyped:
+
+- energetic purple gradient
+
+Creative:
+
+- artistic mixed glow
+
+---
+
+🎞 CONTENT TYPES
+
+Support multiple Pulse cards:
+
+1. Short vertical videos
+2. Text moment cards
+3. Voice clip cards with waveform
+4. Drift logs (ambient clips)
+5. Almost Said anonymous confessions
+
+Mix content types in stream.
+
+---
+
+⚡ INTERACTIONS
+
+Swipe Up:
+
+- next Pulse item
+
+Swipe Down:
+
+- previous item
+
+Tap Right:
+
+- like/react
+
+Long Press:
+
+- pause content
+
+Double Tap:
+
+- quick react animation
+
+Hold:
+
+- optional advanced mode for engagement tracking
+
+---
+
+🔥 PREMIUM ANIMATIONS
+
+- Smooth swipe transitions
+- Fade + slide content change
+- Soft glow pulse on active buttons
+- Progress bar animation
+- Like animation
+- Video auto play with mute option
+
+---
+
+🧠 HEALTHY ENGAGEMENT DESIGN
+
+After 15–20 items show:
+
+"Take a breather?"
+[Continue] [Exit Pulse]
+
+Do NOT create endless manipulative loops.
+
+No public like counts.
+No follower counts on Pulse screen.
+
+---
+
+📱 RESPONSIVE DESIGN
+
+Must work perfectly on:
+
+- Mobile phones (priority)
+- Tablets
+- Desktop preview
+
+Desktop:
+
+- Centered phone-frame style layout
+
+No overflow issues.
+
+---
+
+🎨 VISUAL STYLE
+
+Use StarDust branding:
+
+- Dark premium theme
+- Soft aurora gradients
+- Glassmorphism overlays
+- Clean typography
+- Rounded buttons
+- Smooth shadows
+
+---
+
+⚙️ TECHNICAL REQUIREMENTS
+
+Use HTML + CSS + JavaScript.
+
+Implement:
+
+- swipe detection
+- content switching
+- video autoplay
+- pause/resume
+- reaction animation
+- mood switching
+- responsive layout
+
+---
+
+🧼 CLEANUP
+
+Improve any old Pulse code.
+Remove bugs.
+Fix alignment.
+Optimize performance.
+
+---
+
+🚫 DO NOT
+
+- Do not make generic TikTok clone
+- Do not use ugly colors
+- Do not show vanity metrics
+- Do not break existing navigation
+
+---
+
+✅ FINAL RESULT
+
+Pulse should feel like:
+
+"A premium next-gen reels experience built for real moments, moods, and modern teens."
+
+Return the FULL updated code.
