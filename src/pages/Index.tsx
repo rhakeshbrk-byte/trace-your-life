@@ -109,12 +109,16 @@ const Index = () => {
   };
 
   return (
-    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-      {/* Header */}
+    <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto">
+      {/* Header — hide title on desktop since sidebar shows branding */}
       <header className="flex items-center justify-between mb-5">
-        <div>
+        <div className="md:hidden">
           <h1 className="text-lg font-bold text-foreground">StarDust</h1>
           <p className="text-xs text-muted-foreground">Express yourself freely</p>
+        </div>
+        <div className="hidden md:block">
+          <h1 className="text-lg font-bold text-foreground">Home</h1>
+          <p className="text-xs text-muted-foreground">What's on your mind?</p>
         </div>
         <div className="flex items-center gap-2">
           {/* Notification Bell */}
@@ -227,22 +231,22 @@ const Index = () => {
       {!showRealTalk && (
         <section className="mb-5 opacity-0" style={{ animation: 'fade-in-up 0.4s ease-out forwards' }}>
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 block">✨ Discover</span>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1">
+          <div className="grid grid-cols-4 gap-2 md:grid-cols-4">
             {[
-              { label: "Mirror", emoji: "🪞", desc: "See how others see you", path: "/mirror", gradient: "from-indigo-500/20 to-purple-500/20" },
-              { label: "Echo Chain", emoji: "🔗", desc: "Pass thoughts forward", path: "/echo", gradient: "from-emerald-500/20 to-teal-500/20" },
-              { label: "Signal", emoji: "⚡", desc: "15 min live window", path: "/signal", gradient: "from-orange-500/20 to-red-500/20" },
-              { label: "Pulse", emoji: "💫", desc: "Quiet emotional stream", path: "/pulse", gradient: "from-violet-500/20 to-fuchsia-500/20" },
+              { label: "Mirror", emoji: "🪞", desc: "See how others see you", path: "/mirror" },
+              { label: "Echo Chain", emoji: "🔗", desc: "Pass thoughts forward", path: "/echo" },
+              { label: "Signal", emoji: "⚡", desc: "15 min live window", path: "/signal" },
+              { label: "Pulse", emoji: "💫", desc: "Emotional stream", path: "/pulse" },
             ].map((item, i) => (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className="glass-card-elevated p-3 min-w-[130px] text-left shrink-0 haptic-press opacity-0"
+                className="glass-card-elevated p-3 text-left haptic-press opacity-0 flex flex-col"
                 style={{ animation: `fade-in-up 0.3s ease-out ${i * 60}ms forwards` }}
               >
-                <span className="text-xl block mb-1">{item.emoji}</span>
-                <p className="text-xs font-semibold text-foreground">{item.label}</p>
-                <p className="text-[9px] text-muted-foreground">{item.desc}</p>
+                <span className="text-xl mb-2 block">{item.emoji}</span>
+                <p className="text-xs font-semibold text-foreground leading-tight">{item.label}</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5 leading-tight hidden sm:block">{item.desc}</p>
               </button>
             ))}
           </div>
@@ -252,7 +256,7 @@ const Index = () => {
       {/* Mood Filter */}
       {!showRealTalk && (
         <>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-5 -mx-1 px-1">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-5">
             {moods.map((m) => (
               <button
                 key={m.label}

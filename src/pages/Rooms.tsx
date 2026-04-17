@@ -139,7 +139,7 @@ const Rooms = () => {
         <p className="text-xs text-muted-foreground">24h spaces. No history. Just vibes.</p>
       </header>
 
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide mb-6 -mx-1 px-1 py-2">
+      <div className="flex gap-4 overflow-x-auto scrollbar-hide mb-6 py-2">
         {rooms.map((r, i) => (
           <button
             key={r.id}

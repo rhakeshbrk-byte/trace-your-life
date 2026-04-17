@@ -40,14 +40,10 @@ const AppContent = () => {
   const handleOnboardingComplete = (data: { username: string; moods: string[] }) => {
     try {
       localStorage.setItem(ONBOARDING_KEY, "true");
-      if (data.username) {
-        localStorage.setItem("stardust_username", data.username);
-      }
-      if (data.moods.length > 0) {
-        localStorage.setItem("stardust_moods", JSON.stringify(data.moods));
-      }
+      if (data.username) localStorage.setItem("stardust_username", data.username);
+      if (data.moods.length > 0) localStorage.setItem("stardust_moods", JSON.stringify(data.moods));
     } catch {
-      // localStorage not available
+      // ignore
     }
     setOnboarded(true);
   };
@@ -57,18 +53,20 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative flex">
-      {/* Aurora background */}
+    <div className="h-screen bg-background flex overflow-hidden relative">
+      {/* Aurora background — fixed so it covers the whole screen */}
       <div className="aurora-bg">
         <div className="aurora-blob" />
         <div className="aurora-blob-secondary" />
       </div>
 
-      {/* Sidebar — visible on md+ */}
+      {/* Sidebar — desktop/tablet only */}
       {!hideNav && <Sidebar onPostClick={() => setPostOpen(true)} />}
 
-      {/* Main content area */}
-      <div className={`flex-1 relative z-10 min-h-screen ${!hideNav ? "pb-20 md:pb-0" : ""} md:overflow-y-auto`}>
+      {/* Main scrollable content */}
+      <div
+        className={`flex-1 relative z-10 overflow-y-auto ${!hideNav ? "pb-20 md:pb-0" : ""}`}
+      >
         <PageTransition locationKey={location.pathname}>
           <Routes location={location}>
             <Route path="/" element={<Index />} />
@@ -85,7 +83,7 @@ const AppContent = () => {
         </PageTransition>
       </div>
 
-      {/* Bottom nav — visible on mobile only */}
+      {/* Bottom nav — mobile only */}
       {!hideNav && <BottomNav onPostClick={() => setPostOpen(true)} />}
       <PostModal open={postOpen} onClose={() => setPostOpen(false)} />
     </div>
