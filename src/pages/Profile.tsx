@@ -2,6 +2,10 @@ import { Shield, Brain, ChevronRight, LogOut, ChevronDown, Timer, Lock, Unlock, 
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+const getStoredUsername = () => {
+  try { return localStorage.getItem("stardust_username") || "StarDust User"; } catch { return "StarDust User"; }
+};
+
 const ToggleRow = ({ label, description, defaultOn = false }: { label: string; description: string; defaultOn?: boolean }) => {
   const [on, setOn] = useState(defaultOn);
   const { toast } = useToast();
@@ -195,7 +199,7 @@ const Profile = () => {
           ✦
         </div>
         <div>
-          <p className="text-base font-bold text-foreground">StarDust User</p>
+          <p className="text-base font-bold text-foreground">{getStoredUsername()}</p>
           <p className="text-xs text-muted-foreground">user@stardust.app</p>
           <button
             onClick={() => toast({ title: "Edit profile", description: "Profile editing coming soon" })}

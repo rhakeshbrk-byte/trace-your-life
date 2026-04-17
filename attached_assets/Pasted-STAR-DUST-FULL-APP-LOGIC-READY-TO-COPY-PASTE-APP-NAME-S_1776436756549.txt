@@ -1,0 +1,497 @@
+STAR DUST — FULL APP LOGIC (READY TO COPY PASTE)
+
+APP NAME:
+StarDust
+
+CORE POSITIONING:
+A next-generation social platform for teens focused on real moments, moods, privacy, and connection. It combines the addictive simplicity of short-form content with healthier emotional relevance and stronger social identity.
+
+--------------------------------------------------
+MAIN PRODUCT PHILOSOPHY
+--------------------------------------------------
+
+Most social apps optimize:
+- likes
+- followers
+- vanity
+- endless scrolling
+- fake perfection
+
+StarDust optimizes:
+- moods
+- real moments
+- private circles
+- identity discovery
+- authentic connection
+- intentional engagement
+
+--------------------------------------------------
+TARGET USERS
+--------------------------------------------------
+
+Primary:
+Teenagers and young adults (13–24)
+
+Secondary:
+College students and creators who want lower-pressure social media
+
+--------------------------------------------------
+CORE APP STRUCTURE
+--------------------------------------------------
+
+Bottom Navigation:
+
+1. Home
+2. Pulse
+3. Rooms
+4. Chat
+5. Profile
+
+Desktop:
+Left sidebar version of same navigation
+
+--------------------------------------------------
+1. HOME LOGIC
+--------------------------------------------------
+
+Purpose:
+Main dashboard of the user.
+
+Contains:
+
+- Mood selector
+- Personalized suggestions
+- Mirror preview
+- Echo Chain preview
+- Signal countdown
+- Friend activity
+- Recommended Rooms
+
+Behavior:
+
+When user opens app:
+Show Home first.
+
+If first time user:
+Show onboarding mood + interests selection.
+
+--------------------------------------------------
+2. PULSE LOGIC (MAIN GROWTH FEATURE)
+--------------------------------------------------
+
+Purpose:
+Short-form vertical content experience.
+
+Inspired by Reels/Shorts but personalized by mood and authenticity.
+
+ENTRY FLOW:
+
+When user taps Pulse:
+
+Step 1:
+Ask mood:
+
+- Grinding
+- Lost
+- Healing
+- Hyped
+- Creative
+- Chill
+
+Step 2:
+Load Pulse feed based on:
+
+- selected mood
+- region
+- language
+- watch behavior
+- friends activity
+
+CONTENT TYPES:
+
+- short videos
+- text moments
+- voice clips
+- drift logs
+- confessions
+
+USER INTERACTIONS:
+
+Swipe Up:
+Next item
+
+Swipe Down:
+Previous item
+
+Double Tap:
+React animation
+
+Long Press:
+Pause video
+
+Tap Share:
+Share externally
+
+Tap Save:
+Bookmark
+
+NO PUBLIC COUNTS:
+No likes count
+No follower count
+No views count
+
+ALGORITHM LOGIC:
+
+Track:
+- watch time
+- skips
+- replays
+- saves
+- shares
+- mood preference
+
+If user watches gym clips fully:
+Show more grind / discipline content
+
+If user skips sad content:
+Reduce lost mood content
+
+SESSION CONTROL:
+
+After 15-20 items:
+Show:
+Take a break?
+[Continue] [Exit]
+
+--------------------------------------------------
+3. ROOMS LOGIC
+--------------------------------------------------
+
+Purpose:
+Temporary group spaces.
+
+Users create Rooms with friends.
+
+Examples:
+- school room
+- gym room
+- exam room
+- gaming room
+
+Features:
+
+- text
+- memes
+- voice notes
+- photos
+- polls
+
+LIFESPAN:
+
+24 hours default
+
+Then auto-delete.
+
+Why:
+Creates urgency and repeat visits.
+
+--------------------------------------------------
+4. CHAT LOGIC
+--------------------------------------------------
+
+Private messaging system.
+
+Features:
+
+- one-to-one chat
+- group chat
+- send photos
+- send voice notes
+- share Pulse content
+- react to messages
+
+Optional:
+Mood status visible beside name.
+
+--------------------------------------------------
+5. PROFILE LOGIC
+--------------------------------------------------
+
+Contains:
+
+- username
+- avatar
+- mood history
+- unlocked themes
+- saved Pulse items
+- circles
+- settings
+
+NO PUBLIC FOLLOWER FLEX.
+
+--------------------------------------------------
+6. MIRROR FEATURE (DIFFERENTIATOR)
+--------------------------------------------------
+
+Purpose:
+See how trusted people view you.
+
+FLOW:
+
+User taps Mirror.
+
+Select 5 trusted people.
+
+They receive prompts:
+
+- What vibe do they give?
+- What are they good at?
+- When did they help you?
+
+Responses are anonymous.
+
+SYSTEM converts responses into trait profile.
+
+Example Output:
+
+- Reliable
+- Funny
+- Calm under pressure
+- Quiet but observant
+
+User can:
+- hide replies
+- limit visibility
+- request edits
+
+--------------------------------------------------
+7. ECHO CHAIN LOGIC
+--------------------------------------------------
+
+Collaborative content relay.
+
+Flow:
+
+User starts chain:
+photo / sketch / voice
+
+Pass to friend.
+
+Each friend adds something.
+
+If nobody replies in 24h:
+Chain dies.
+
+Psychology:
+Users don’t want to break chain.
+
+--------------------------------------------------
+8. DAILY SIGNAL LOGIC
+--------------------------------------------------
+
+Once per day random time:
+
+Notification:
+Signal Live for 15 mins.
+
+Users enter live shared space.
+
+Can post:
+
+- reactions
+- photos
+- quick voice clips
+
+Ends after 15 mins.
+
+Nothing saved.
+
+Creates habit + urgency.
+
+--------------------------------------------------
+9. CIRCLES LOGIC
+--------------------------------------------------
+
+Trusted social groups.
+
+Examples:
+
+- close friends
+- classmates
+- gym bros
+- cousins
+
+Used for:
+
+- Mirror
+- private Rooms
+- private Pulse visibility
+- Signal groups
+
+--------------------------------------------------
+10. POSTING SYSTEM
+--------------------------------------------------
+
+Before posting ask:
+
+What mood are you in?
+
+Then choose:
+
+- video
+- text
+- voice
+- image
+
+Post gets mood tag.
+
+Used in Pulse + Home recommendations.
+
+--------------------------------------------------
+11. REWARD / UNLOCK SYSTEM
+--------------------------------------------------
+
+Users unlock cosmetic features by healthy activity.
+
+Examples:
+
+7 day posting streak:
+Unlock theme
+
+Meaningful interactions:
+Unlock profile glow
+
+Created Room:
+Unlock badge
+
+No gambling reward systems.
+
+--------------------------------------------------
+12. MODERATION LOGIC
+--------------------------------------------------
+
+Protect users.
+
+Use:
+
+- report button
+- block users
+- mute users
+- AI detection for abuse
+- keyword filters
+- age-safe settings
+
+Anonymous features require strong moderation.
+
+--------------------------------------------------
+13. RETENTION SYSTEM
+--------------------------------------------------
+
+Daily return reasons:
+
+- Pulse fresh content
+- Signal event
+- Rooms expiring
+- Echo chains pending
+- Mirror requests waiting
+
+--------------------------------------------------
+14. VIRAL GROWTH SYSTEM
+--------------------------------------------------
+
+Users invite friends because:
+
+- need people for Mirror
+- need people for Rooms
+- need people for Chains
+- want better Pulse local content
+
+Built-in referral loops.
+
+--------------------------------------------------
+15. MONETIZATION (LATER)
+--------------------------------------------------
+
+Do not monetize early.
+
+Later options:
+
+- premium themes
+- creator boosts
+- custom rooms
+- profile packs
+- ad-lite model
+
+Avoid ruining trust.
+
+--------------------------------------------------
+16. UI STYLE
+--------------------------------------------------
+
+Theme:
+
+Dark mode
+Soft gradients
+Aurora glow
+Glassmorphism
+
+Colors:
+
+Indigo
+Purple
+Blue
+Teal
+
+Feeling:
+
+Modern
+Emotional
+Premium
+Youthful
+
+--------------------------------------------------
+17. MVP VERSION (BUILD FIRST)
+--------------------------------------------------
+
+Build first:
+
+1. Login
+2. Home
+3. Pulse
+4. Upload video/text
+5. Basic chat
+6. Rooms
+
+Later:
+
+Mirror
+Signal
+Echo Chain
+Unlock system
+
+--------------------------------------------------
+18. MAIN SUCCESS FORMULA
+--------------------------------------------------
+
+Instagram = performance
+TikTok = entertainment
+Snapchat = friends
+
+StarDust = mood + real moments + identity
+
+--------------------------------------------------
+19. ONE LINE PITCH
+--------------------------------------------------
+
+StarDust is a premium social platform where teens share real moments, discover mood-matched content, and connect without pressure.
+
+--------------------------------------------------
+20. WHAT MAKES IT WIN
+--------------------------------------------------
+
+- familiar short video model
+- stronger emotional relevance
+- no vanity pressure
+- real social mechanics
+- modern premium design
+- India friendly trusted-circle culture

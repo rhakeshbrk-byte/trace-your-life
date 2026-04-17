@@ -8,6 +8,7 @@ import BottomNav from "@/components/layout/BottomNav";
 import Sidebar from "@/components/layout/Sidebar";
 import PostModal from "@/components/PostModal";
 import PageTransition from "@/components/PageTransition";
+import Onboarding from "@/components/Onboarding";
 import Index from "./pages/Index";
 import Rooms from "./pages/Rooms";
 import Messages from "./pages/Messages";
@@ -21,10 +22,39 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const ONBOARDING_KEY = "stardust_onboarded";
+
 const AppContent = () => {
   const location = useLocation();
   const hideNav = location.pathname.startsWith("/messages/");
   const [postOpen, setPostOpen] = useState(false);
+
+  const [onboarded, setOnboarded] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(ONBOARDING_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const handleOnboardingComplete = (data: { username: string; moods: string[] }) => {
+    try {
+      localStorage.setItem(ONBOARDING_KEY, "true");
+      if (data.username) {
+        localStorage.setItem("stardust_username", data.username);
+      }
+      if (data.moods.length > 0) {
+        localStorage.setItem("stardust_moods", JSON.stringify(data.moods));
+      }
+    } catch {
+      // localStorage not available
+    }
+    setOnboarded(true);
+  };
+
+  if (!onboarded) {
+    return <Onboarding onComplete={handleOnboardingComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-background relative flex">
