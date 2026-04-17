@@ -14,7 +14,7 @@ const floatingCards = [
 const Signal = () => {
   const { toast } = useToast();
   const [active, setActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 min
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
   const [ended, setEnded] = useState(false);
   const [reactions, setReactions] = useState<{ id: number; emoji: string; x: number; y: number }[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -67,14 +67,18 @@ const Signal = () => {
   // Ended state
   if (ended) {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[70vh]">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh]" data-testid="signal-ended">
         <div className="text-center opacity-0" style={{ animation: "fade-in-up 0.6s ease-out forwards" }}>
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted/20 flex items-center justify-center">
             <Zap className="w-8 h-8 text-muted-foreground" />
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Signal Ended</h2>
           <p className="text-sm text-muted-foreground mb-6">The moment has passed. What was shared stays here.</p>
-          <button onClick={() => { setEnded(false); setTimeLeft(15 * 60); }} className="px-6 py-3 rounded-full btn-glass text-sm font-medium text-muted-foreground haptic-press">
+          <button
+            data-testid="button-back-to-signal"
+            onClick={() => { setEnded(false); setTimeLeft(15 * 60); }}
+            className="px-6 py-3 rounded-full btn-glass text-sm font-medium text-muted-foreground haptic-press"
+          >
             Back to Signal
           </button>
         </div>
@@ -85,10 +89,13 @@ const Signal = () => {
   // Active state — full-screen signal
   if (active) {
     return (
-      <div className="fixed inset-0 z-[200] flex flex-col" style={{
-        background: "linear-gradient(135deg, rgba(11,11,15,0.95), rgba(99,102,241,0.15), rgba(59,130,246,0.1), rgba(139,92,246,0.12))",
-      }}>
-        {/* Intense aurora */}
+      <div
+        data-testid="signal-live"
+        className="fixed inset-0 z-[200] flex flex-col"
+        style={{
+          background: "linear-gradient(135deg, rgba(11,11,15,0.95), rgba(99,102,241,0.15), rgba(59,130,246,0.1), rgba(139,92,246,0.12))",
+        }}
+      >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute w-[600px] h-[600px] rounded-full top-[-20%] left-[-10%] opacity-25" style={{
             background: "radial-gradient(circle, #6366F1 0%, #8B5CF6 35%, transparent 70%)",
@@ -101,20 +108,27 @@ const Signal = () => {
         </div>
 
         <div className="relative z-10 flex flex-col h-full p-4 max-w-lg mx-auto w-full">
-          {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               <span className="text-xs font-semibold text-foreground">SIGNAL LIVE</span>
             </div>
-            <button onClick={endSignal} className="w-8 h-8 rounded-full btn-glass flex items-center justify-center haptic-press">
+            <button
+              data-testid="button-end-signal"
+              onClick={endSignal}
+              className="w-8 h-8 rounded-full btn-glass flex items-center justify-center haptic-press"
+              aria-label="End signal"
+            >
               <X className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
 
-          {/* Timer */}
           <div className="text-center mb-6">
-            <span className="text-3xl font-bold text-foreground tracking-wider" style={{ textShadow: "0 0 20px rgba(99,102,241,0.4)" }}>
+            <span
+              data-testid="text-signal-timer"
+              className="text-3xl font-bold text-foreground tracking-wider"
+              style={{ textShadow: "0 0 20px rgba(99,102,241,0.4)" }}
+            >
               {formatTime(timeLeft)}
             </span>
             <div className="h-1 bg-muted/20 rounded-full overflow-hidden mt-3 max-w-xs mx-auto">
@@ -125,11 +139,11 @@ const Signal = () => {
             </div>
           </div>
 
-          {/* Floating cards */}
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" data-testid="signal-canvas">
             {floatingCards.map((card, i) => (
               <div
                 key={card.id}
+                data-testid={`signal-card-${card.id}`}
                 className="absolute glass-card p-3 rounded-xl opacity-0"
                 style={{
                   left: `${card.x}%`, top: `${card.y}%`,
@@ -143,7 +157,6 @@ const Signal = () => {
               </div>
             ))}
 
-            {/* Live reactions */}
             {reactions.map(r => (
               <div
                 key={r.id}
@@ -158,27 +171,32 @@ const Signal = () => {
             ))}
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center justify-center gap-4 py-4">
             <button
+              data-testid="button-signal-snap"
               onClick={() => { addReaction("📸"); toast({ title: "Snap!", description: "Photo shared to signal" }); }}
               className="w-14 h-14 rounded-full btn-glass flex items-center justify-center haptic-press"
+              aria-label="Share snap"
               style={{ boxShadow: "0 0 20px rgba(99,102,241,0.15)" }}
             >
               <Camera className="w-6 h-6 text-foreground" />
             </button>
             <button
+              data-testid="button-signal-voice"
               onClick={() => { addReaction("🎙️"); toast({ title: "Recording...", description: "Voice note shared" }); }}
               className="w-16 h-16 rounded-full gradient-glow flex items-center justify-center haptic-press"
+              aria-label="Share voice note"
             >
               <Mic className="w-7 h-7 text-foreground" />
             </button>
             <button
+              data-testid="button-signal-react"
               onClick={() => {
                 const emojis = ["🔥", "💜", "✨", "😭", "💀", "❤️"];
                 addReaction(emojis[Math.floor(Math.random() * emojis.length)]);
               }}
               className="w-14 h-14 rounded-full btn-glass flex items-center justify-center haptic-press"
+              aria-label="Send reaction"
               style={{ boxShadow: "0 0 20px rgba(99,102,241,0.15)" }}
             >
               <Smile className="w-6 h-6 text-foreground" />
@@ -191,14 +209,18 @@ const Signal = () => {
 
   // Entry screen
   return (
-    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
+    <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="signal-entry">
       <header className="mb-6">
         <h1 className="text-xl font-bold text-foreground mb-1">⚡ Daily Signal</h1>
         <p className="text-xs text-muted-foreground">15 minutes of raw, live connection</p>
       </header>
 
-      <div className="glass-card-elevated p-6 text-center opacity-0" style={{ animation: "fade-in-up 0.5s ease-out forwards" }}>
-        <div className="w-20 h-20 mx-auto mb-4 rounded-full gradient-glow flex items-center justify-center"
+      <div
+        className="glass-card-elevated p-6 text-center opacity-0"
+        style={{ animation: "fade-in-up 0.5s ease-out forwards" }}
+      >
+        <div
+          className="w-20 h-20 mx-auto mb-4 rounded-full gradient-glow flex items-center justify-center"
           style={{ animation: "fab-pulse 3s ease-in-out infinite" }}
         >
           <Zap className="w-8 h-8 text-foreground" />
@@ -208,6 +230,7 @@ const Signal = () => {
           A 15-minute live window. Share snaps, voice notes, and reactions in real time. When it ends, it's gone.
         </p>
         <button
+          data-testid="button-go-live"
           onClick={startSignal}
           className="px-8 py-3 rounded-full gradient-glow text-sm font-semibold text-foreground haptic-press"
           style={{ animation: "fab-pulse 3s ease-in-out infinite" }}
@@ -217,7 +240,6 @@ const Signal = () => {
         </button>
       </div>
 
-      {/* What to expect */}
       <div className="mt-6 space-y-3 opacity-0" style={{ animation: "fade-in-up 0.5s ease-out 150ms forwards" }}>
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">How it works</span>
         {[

@@ -124,7 +124,10 @@ const Index = () => {
           {/* Notification Bell */}
           <div className="relative">
             <button
+              data-testid="button-notifications"
               onClick={() => setNotifOpen(!notifOpen)}
+              aria-label="Notifications"
+              aria-expanded={notifOpen}
               className="w-9 h-9 rounded-full btn-glass flex items-center justify-center relative"
             >
               <Bell className="w-4 h-4 text-muted-foreground" />
@@ -161,7 +164,9 @@ const Index = () => {
           </div>
 
           <button
+            data-testid="button-real-talk-toggle"
             onClick={() => setShowRealTalk(!showRealTalk)}
+            aria-pressed={showRealTalk}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
               showRealTalk
                 ? "gradient-primary text-foreground btn-glow"
@@ -260,7 +265,9 @@ const Index = () => {
             {moods.map((m) => (
               <button
                 key={m.label}
+                data-testid={`button-mood-filter-${m.label.toLowerCase()}`}
                 onClick={() => setActiveMood(m.label)}
+                aria-pressed={activeMood === m.label}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold shrink-0 transition-all duration-300 haptic-press ${
                   activeMood === m.label
                     ? `bg-gradient-to-r ${m.gradient} text-foreground shadow-lg scale-105`
@@ -274,10 +281,20 @@ const Index = () => {
           </div>
 
           {/* Posts */}
-          <section className="space-y-3">
+          <section className="space-y-3" data-testid="feed-posts">
+            {filtered.length === 0 && (
+              <div data-testid="feed-empty-state" className="flex flex-col items-center justify-center py-16 gap-4 opacity-0" style={{ animation: "fade-in-up 0.4s ease-out forwards" }}>
+                <div className="w-14 h-14 rounded-full glass-card flex items-center justify-center text-2xl">✨</div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-foreground">No posts yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">Be the first to share your mood</p>
+                </div>
+              </div>
+            )}
             {filtered.map((post, i) => (
               <div
                 key={post.id}
+                data-testid={`post-card-${post.id}`}
                 className="glass-card-elevated p-4 opacity-0"
                 style={{ animation: `fade-in-up 0.4s ease-out ${i * 80}ms forwards` }}
               >
@@ -308,7 +325,9 @@ const Index = () => {
                 {/* Actions */}
                 <div className="flex items-center gap-1">
                   <button
+                    data-testid={`button-react-${post.id}`}
                     onClick={() => handleReact(post.id)}
+                    aria-pressed={reacted.has(post.id)}
                     className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs transition-all duration-300 haptic-press ${
                       reacted.has(post.id)
                         ? "bg-pink-500/20 text-pink-400"
@@ -319,14 +338,18 @@ const Index = () => {
                     Feel this
                   </button>
                   <button
+                    data-testid={`button-reply-${post.id}`}
                     onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                    aria-expanded={expandedPost === post.id}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs btn-glass text-muted-foreground hover:text-foreground transition-all haptic-press"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
                     Reply {post.replies.length > 0 && `(${post.replies.length})`}
                   </button>
                   <button
+                    data-testid={`button-reveal-${post.id}`}
                     onClick={() => handleReveal(post.id)}
+                    aria-pressed={post.revealed}
                     className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs transition-all ml-auto haptic-press ${
                       post.revealed
                         ? "bg-primary/20 text-primary"

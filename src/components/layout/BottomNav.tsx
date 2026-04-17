@@ -20,13 +20,17 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
   if (location.pathname.startsWith("/messages/")) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={{
-      background: 'rgba(11, 11, 15, 0.85)',
-      backdropFilter: 'blur(24px)',
-      WebkitBackdropFilter: 'blur(24px)',
-      borderTop: '1px solid rgba(255,255,255,0.06)',
-      borderRadius: '20px 20px 0 0',
-    }}>
+    <nav
+      data-testid="bottom-nav"
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+      style={{
+        background: "rgba(11, 11, 15, 0.85)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "20px 20px 0 0",
+      }}
+    >
       <div className="max-w-lg mx-auto flex items-center justify-around py-2 px-4">
         {tabs.map((tab) => {
           const isPost = tab.path === "__post__";
@@ -36,8 +40,10 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
             return (
               <button
                 key="post"
+                data-testid="button-bottom-nav-post"
                 onClick={onPostClick}
                 className="w-12 h-12 -mt-6 rounded-full flex items-center justify-center gradient-primary btn-glow fab-pulse"
+                aria-label="New post"
               >
                 <Plus className="w-6 h-6 text-primary-foreground" />
               </button>
@@ -47,18 +53,28 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
           return (
             <button
               key={tab.path}
+              data-testid={`button-bottom-nav-${tab.label.toLowerCase()}`}
               onClick={() => navigate(tab.path)}
+              aria-label={tab.label}
+              aria-current={isActive ? "page" : undefined}
               className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-2xl transition-all duration-300 ${
                 isActive ? "scale-110" : "scale-100 hover:scale-105"
               }`}
-              style={isActive ? {
-                background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.1))',
-                boxShadow: '0 0 16px rgba(99,102,241,0.15)',
-              } : undefined}
+              style={
+                isActive
+                  ? {
+                      background:
+                        "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.1))",
+                      boxShadow: "0 0 16px rgba(99,102,241,0.15)",
+                    }
+                  : undefined
+              }
             >
               <tab.icon
                 className={`w-5 h-5 transition-all duration-300 ${
-                  isActive ? "text-primary drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" : "text-muted-foreground"
+                  isActive
+                    ? "text-primary drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]"
+                    : "text-muted-foreground"
                 }`}
               />
               <span

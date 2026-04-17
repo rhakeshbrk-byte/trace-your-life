@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Clock, ChevronRight, Plus, Users, Check } from "lucide-react";
+import { ArrowLeft, Clock, ChevronRight, Plus, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ChainContribution {
@@ -15,7 +15,7 @@ interface Chain {
   id: number;
   title: string;
   status: "active" | "completed" | "dead";
-  timeLeft: number; // seconds
+  timeLeft: number;
   participants: { initial: string; color: string }[];
   contributions: ChainContribution[];
   myTurn: boolean;
@@ -78,7 +78,6 @@ const EchoChain = () => {
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
   const [replyText, setReplyText] = useState("");
 
-  // Countdown timer
   useEffect(() => {
     const interval = setInterval(() => {
       setChains(prev => prev.map(c =>
@@ -118,13 +117,17 @@ const EchoChain = () => {
   // Chain detail
   if (selectedChain) {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-        <button onClick={() => setSelectedChain(null)} className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="echo-chain-detail">
+        <button
+          data-testid="button-back-to-chains"
+          onClick={() => setSelectedChain(null)}
+          className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         <div className="mb-5 opacity-0" style={{ animation: "fade-in-up 0.4s ease-out forwards" }}>
-          <h2 className="text-base font-bold text-foreground mb-1">{selectedChain.title}</h2>
+          <h2 data-testid="text-chain-title" className="text-base font-bold text-foreground mb-1">{selectedChain.title}</h2>
           <div className="flex items-center gap-3">
             <div className="flex -space-x-1.5">
               {selectedChain.participants.map((p, i) => (
@@ -143,19 +146,20 @@ const EchoChain = () => {
           </div>
         </div>
 
-        {/* Timeline */}
-        <div className="relative pl-6 mb-6">
+        <div className="relative pl-6 mb-6" data-testid="chain-timeline">
           <div className="absolute left-2.5 top-0 bottom-0 w-0.5 timeline-line rounded-full" />
           {selectedChain.contributions.map((c, i) => (
             <div
               key={c.id}
+              data-testid={`chain-contribution-${c.id}`}
               className="relative mb-4 opacity-0"
               style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
             >
               <div className={`absolute -left-[14px] top-1 w-5 h-5 rounded-full bg-gradient-to-br ${c.color} flex items-center justify-center text-[8px] font-bold text-foreground border-2 border-background ${c.isCurrent ? "ring-2 ring-primary/50 ring-offset-2 ring-offset-background" : ""}`}>
                 {c.initial}
               </div>
-              <div className={`glass-card${c.isCurrent ? "-elevated" : ""} p-3 rounded-xl ${c.isCurrent ? "border-primary/20" : ""}`}
+              <div
+                className={`glass-card${c.isCurrent ? "-elevated" : ""} p-3 rounded-xl ${c.isCurrent ? "border-primary/20" : ""}`}
                 style={c.isCurrent ? { boxShadow: "0 0 20px rgba(99,102,241,0.15)" } : undefined}
               >
                 <p className="text-xs text-muted-foreground mb-1">{c.author}</p>
@@ -165,22 +169,46 @@ const EchoChain = () => {
           ))}
         </div>
 
-        {/* Continue input */}
         {selectedChain.status === "active" && selectedChain.myTurn && (
           <div className="opacity-0" style={{ animation: "fade-in-up 0.4s ease-out 400ms forwards" }}>
             <p className="text-xs text-primary font-medium mb-2">✨ It's your turn</p>
             <div className="flex gap-2">
               <input
+                data-testid="input-chain-reply"
                 value={replyText}
                 onChange={e => setReplyText(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleContinue()}
                 placeholder="Continue the chain..."
                 className="flex-1 bg-muted/30 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border/50 focus:border-primary/50"
               />
-              <button onClick={handleContinue} className="px-4 rounded-xl gradient-primary text-foreground haptic-press btn-glow">
+              <button
+                data-testid="button-continue-chain"
+                onClick={handleContinue}
+                disabled={!replyText.trim()}
+                className="px-4 rounded-xl gradient-primary text-foreground haptic-press btn-glow disabled:opacity-40"
+                aria-label="Continue chain"
+              >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
+          </div>
+        )}
+
+        {selectedChain.status === "active" && !selectedChain.myTurn && (
+          <div className="glass-card p-4 rounded-xl text-center opacity-0" style={{ animation: "fade-in-up 0.4s ease-out 400ms forwards" }}>
+            <p className="text-xs text-muted-foreground">Waiting for others to respond…</p>
+          </div>
+        )}
+
+        {selectedChain.status !== "active" && (
+          <div
+            data-testid="chain-closed-state"
+            className="glass-card p-4 rounded-xl text-center opacity-0"
+            style={{ animation: "fade-in-up 0.4s ease-out 400ms forwards" }}
+          >
+            <p className="text-xs text-muted-foreground">
+              {selectedChain.status === "completed" ? "This chain is complete." : "This chain has expired."}
+            </p>
           </div>
         )}
       </div>
@@ -189,59 +217,72 @@ const EchoChain = () => {
 
   // Chain list
   return (
-    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
+    <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="echo-chain-page">
       <header className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-xl font-bold text-foreground mb-1">🔗 Echo Chain</h1>
           <p className="text-xs text-muted-foreground">Pass thoughts forward, build on each other</p>
         </div>
         <button
+          data-testid="button-new-chain"
           onClick={() => toast({ title: "New Chain", description: "Start a new echo chain with your circle" })}
           className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center btn-glow haptic-press"
+          aria-label="New echo chain"
         >
           <Plus className="w-4 h-4 text-foreground" />
         </button>
       </header>
 
-      <div className="space-y-3">
-        {chains.map((chain, i) => (
-          <button
-            key={chain.id}
-            onClick={() => setSelectedChain(chain)}
-            className={`w-full text-left glass-card-elevated p-4 opacity-0 haptic-press ${chain.status === "dead" ? "opacity-50" : ""}`}
-            style={{ animation: `fade-in-up 0.4s ease-out ${i * 80}ms forwards` }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-foreground flex-1 mr-2">{chain.title}</h3>
-              {chain.myTurn && chain.status === "active" && (
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full gradient-primary text-foreground">YOUR TURN</span>
-              )}
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-1.5">
-                  {chain.participants.map((p, pi) => (
-                    <div key={pi} className={`w-6 h-6 rounded-full bg-gradient-to-br ${p.color} flex items-center justify-center text-[8px] font-bold text-foreground border border-background`}>
-                      {p.initial}
-                    </div>
-                  ))}
-                </div>
-                <span className="text-[10px] text-muted-foreground">{chain.contributions.length} contributions</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {chain.status === "active" && (
-                  <span className="text-[10px] text-accent flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> {formatCountdown(chain.timeLeft)}
-                  </span>
+      {chains.length === 0 ? (
+        <div data-testid="chains-empty-state" className="flex flex-col items-center justify-center py-20 gap-4">
+          <div className="w-16 h-16 rounded-full glass-card flex items-center justify-center text-2xl">🔗</div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-foreground">No chains yet</p>
+            <p className="text-xs text-muted-foreground mt-1">Start a new echo chain with your circle</p>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-3" data-testid="chains-list">
+          {chains.map((chain, i) => (
+            <button
+              key={chain.id}
+              data-testid={`button-chain-item-${chain.id}`}
+              onClick={() => setSelectedChain(chain)}
+              className={`w-full text-left glass-card-elevated p-4 opacity-0 haptic-press ${chain.status === "dead" ? "opacity-50" : ""}`}
+              style={{ animation: `fade-in-up 0.4s ease-out ${i * 80}ms forwards` }}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h3 data-testid={`text-chain-title-${chain.id}`} className="text-sm font-semibold text-foreground flex-1 mr-2">{chain.title}</h3>
+                {chain.myTurn && chain.status === "active" && (
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full gradient-primary text-foreground">YOUR TURN</span>
                 )}
-                <span className={`text-[10px] capitalize ${statusStyle(chain.status)}`}>
-                  {chain.status === "dead" ? "expired" : chain.status}
-                </span>
               </div>
-            </div>
-          </button>
-        ))}
-      </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-1.5">
+                    {chain.participants.map((p, pi) => (
+                      <div key={pi} className={`w-6 h-6 rounded-full bg-gradient-to-br ${p.color} flex items-center justify-center text-[8px] font-bold text-foreground border border-background`}>
+                        {p.initial}
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground">{chain.contributions.length} contributions</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {chain.status === "active" && (
+                    <span className="text-[10px] text-accent flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {formatCountdown(chain.timeLeft)}
+                    </span>
+                  )}
+                  <span className={`text-[10px] capitalize ${statusStyle(chain.status)}`}>
+                    {chain.status === "dead" ? "expired" : chain.status}
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

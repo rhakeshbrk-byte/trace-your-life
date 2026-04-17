@@ -6,7 +6,7 @@ const getStoredUsername = () => {
   try { return localStorage.getItem("stardust_username") || "StarDust User"; } catch { return "StarDust User"; }
 };
 
-const ToggleRow = ({ label, description, defaultOn = false }: { label: string; description: string; defaultOn?: boolean }) => {
+const ToggleRow = ({ label, description, defaultOn = false, testId }: { label: string; description: string; defaultOn?: boolean; testId?: string }) => {
   const [on, setOn] = useState(defaultOn);
   const { toast } = useToast();
 
@@ -23,11 +23,14 @@ const ToggleRow = ({ label, description, defaultOn = false }: { label: string; d
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
       <button
+        data-testid={testId}
         onClick={handleToggle}
+        aria-pressed={on}
+        aria-label={`${label}: ${on ? "on" : "off"}`}
         className="w-11 h-6 rounded-full transition-all duration-300 relative"
         style={{
-          background: on ? 'linear-gradient(135deg, hsl(239 84% 67%), hsl(217 91% 60%))' : 'rgba(26, 26, 26, 0.8)',
-          boxShadow: on ? '0 0 12px rgba(99,102,241,0.3)' : 'none',
+          background: on ? "linear-gradient(135deg, hsl(239 84% 67%), hsl(217 91% 60%))" : "rgba(26, 26, 26, 0.8)",
+          boxShadow: on ? "0 0 12px rgba(99,102,241,0.3)" : "none",
         }}
       >
         <div
@@ -39,21 +42,28 @@ const ToggleRow = ({ label, description, defaultOn = false }: { label: string; d
   );
 };
 
-const AccordionSection = ({ icon: Icon, title, color, children, delay = "0ms" }: {
+const AccordionSection = ({ icon: Icon, title, color, children, delay = "0ms", testId }: {
   icon: React.ElementType;
   title: string;
   color: string;
   children: React.ReactNode;
   delay?: string;
+  testId?: string;
 }) => {
   const [open, setOpen] = useState(true);
 
   return (
     <section
+      data-testid={testId}
       className="glass-card-elevated mb-4 opacity-0 overflow-hidden"
       style={{ animation: `fade-in-up 0.5s ease-out ${delay} forwards` }}
     >
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-4">
+      <button
+        onClick={() => setOpen(!open)}
+        data-testid={`${testId}-toggle`}
+        className="w-full flex items-center justify-between p-4"
+        aria-expanded={open}
+      >
         <div className="flex items-center gap-2">
           <Icon className={`w-4 h-4 text-${color}`} />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</span>
@@ -62,7 +72,7 @@ const AccordionSection = ({ icon: Icon, title, color, children, delay = "0ms" }:
       </button>
       <div className={`transition-all duration-400 ease-in-out overflow-hidden ${open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}>
         <div className="px-4 pb-4">
-          <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
             {children}
           </div>
         </div>
@@ -71,7 +81,6 @@ const AccordionSection = ({ icon: Icon, title, color, children, delay = "0ms" }:
   );
 };
 
-// Mood history data
 const moodHistory = [
   { day: "Mon", mood: "Grinding", emoji: "💪", intensity: 80 },
   { day: "Tue", mood: "Creative", emoji: "🎨", intensity: 60 },
@@ -90,7 +99,6 @@ const moodBarColors: Record<string, string> = {
   Creative: "from-purple-500 to-pink-500",
 };
 
-// Unlock system
 const unlockFeatures = [
   { id: 1, name: "Voice Notes", icon: "🎙️", unlocked: true, requirement: "Send 10 messages" },
   { id: 2, name: "Custom Themes", icon: "🎨", unlocked: true, requirement: "7-day streak" },
@@ -102,7 +110,7 @@ const unlockFeatures = [
 const Profile = () => {
   const { toast } = useToast();
   const [focusActive, setFocusActive] = useState(false);
-  const [focusTime, setFocusTime] = useState(25 * 60); // 25 min in seconds
+  const [focusTime, setFocusTime] = useState(25 * 60);
   const [focusPreset, setFocusPreset] = useState(25);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -132,22 +140,33 @@ const Profile = () => {
     setFocusTime(focusPreset * 60);
   };
 
+  const handleSignOut = () => {
+    try {
+      localStorage.removeItem("stardust_onboarded");
+      localStorage.removeItem("stardust_username");
+      localStorage.removeItem("stardust_moods");
+    } catch {
+      // ignore
+    }
+    window.location.reload();
+  };
+
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
     return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
   };
 
-  // Focus Mode Overlay
   if (focusActive) {
     const progress = 1 - focusTime / (focusPreset * 60);
     return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{
-        background: 'linear-gradient(135deg, rgba(11,11,15,0.98), rgba(99,102,241,0.08))',
-      }}>
+      <div
+        data-testid="focus-mode-overlay"
+        className="fixed inset-0 z-[200] flex items-center justify-center"
+        style={{ background: "linear-gradient(135deg, rgba(11,11,15,0.98), rgba(99,102,241,0.08))" }}
+      >
         <div className="aurora-bg"><div className="aurora-blob" /></div>
         <div className="relative z-10 flex flex-col items-center gap-8">
-          {/* Timer circle */}
           <div className="relative w-48 h-48">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
@@ -165,7 +184,7 @@ const Profile = () => {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-4xl font-bold text-foreground tracking-wider">{formatTime(focusTime)}</span>
+              <span data-testid="text-focus-timer" className="text-4xl font-bold text-foreground tracking-wider">{formatTime(focusTime)}</span>
               <span className="text-xs text-muted-foreground mt-1">Stay focused</span>
             </div>
           </div>
@@ -175,6 +194,7 @@ const Profile = () => {
           </p>
 
           <button
+            data-testid="button-end-focus"
             onClick={stopFocus}
             className="px-6 py-2.5 rounded-full btn-glass text-sm text-muted-foreground hover:text-foreground haptic-press"
           >
@@ -187,21 +207,26 @@ const Profile = () => {
   }
 
   return (
-    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
+    <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="profile-page">
       <header className="mb-6">
         <h1 className="text-xl font-bold text-foreground mb-1">Profile</h1>
         <p className="text-xs text-muted-foreground">Your settings and privacy</p>
       </header>
 
       {/* Profile card */}
-      <div className="glass-card-elevated p-4 mb-4 flex items-center gap-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out forwards' }}>
+      <div
+        data-testid="profile-card"
+        className="glass-card-elevated p-4 mb-4 flex items-center gap-4 opacity-0"
+        style={{ animation: "fade-in-up 0.5s ease-out forwards" }}
+      >
         <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-xl font-bold text-foreground btn-glow">
           ✦
         </div>
         <div>
-          <p className="text-base font-bold text-foreground">{getStoredUsername()}</p>
-          <p className="text-xs text-muted-foreground">user@stardust.app</p>
+          <p data-testid="text-username" className="text-base font-bold text-foreground">{getStoredUsername()}</p>
+          <p data-testid="text-user-email" className="text-xs text-muted-foreground">user@stardust.app</p>
           <button
+            data-testid="button-edit-profile"
             onClick={() => toast({ title: "Edit profile", description: "Profile editing coming soon" })}
             className="text-xs text-primary font-medium mt-1 transition-all hover:text-secondary"
           >
@@ -211,7 +236,11 @@ const Profile = () => {
       </div>
 
       {/* Focus Mode */}
-      <section className="glass-card-elevated mb-4 p-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 50ms forwards' }}>
+      <section
+        data-testid="focus-mode-section"
+        className="glass-card-elevated mb-4 p-4 opacity-0"
+        style={{ animation: "fade-in-up 0.5s ease-out 50ms forwards" }}
+      >
         <div className="flex items-center gap-2 mb-3">
           <Timer className="w-4 h-4 text-primary" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Focus Mode</span>
@@ -221,7 +250,9 @@ const Profile = () => {
           {[15, 25, 45, 60].map(min => (
             <button
               key={min}
+              data-testid={`button-focus-preset-${min}`}
               onClick={() => { setFocusPreset(min); setFocusTime(min * 60); }}
+              aria-pressed={focusPreset === min}
               className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all haptic-press ${
                 focusPreset === min
                   ? "gradient-primary text-foreground btn-glow"
@@ -232,19 +263,27 @@ const Profile = () => {
             </button>
           ))}
         </div>
-        <button onClick={startFocus} className="w-full py-2.5 rounded-xl gradient-primary text-sm font-semibold text-foreground btn-glow haptic-press">
+        <button
+          data-testid="button-start-focus"
+          onClick={startFocus}
+          className="w-full py-2.5 rounded-xl gradient-primary text-sm font-semibold text-foreground btn-glow haptic-press"
+        >
           Start Focus Session
         </button>
       </section>
 
       {/* Mood History */}
-      <section className="glass-card-elevated mb-4 p-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 100ms forwards' }}>
+      <section
+        data-testid="mood-history-section"
+        className="glass-card-elevated mb-4 p-4 opacity-0"
+        style={{ animation: "fade-in-up 0.5s ease-out 100ms forwards" }}
+      >
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">📊 Mood History</span>
         </div>
         <div className="flex items-end gap-2 h-32">
           {moodHistory.map((entry, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+            <div key={i} data-testid={`mood-bar-${entry.day}`} className="flex-1 flex flex-col items-center gap-1">
               <span className="text-sm">{entry.emoji}</span>
               <div className="w-full rounded-t-lg relative overflow-hidden" style={{ height: `${entry.intensity}%` }}>
                 <div className={`absolute inset-0 bg-gradient-to-t ${moodBarColors[entry.mood]} rounded-t-lg opacity-80`} />
@@ -256,7 +295,11 @@ const Profile = () => {
       </section>
 
       {/* Unlock System */}
-      <section className="glass-card-elevated mb-4 p-4 opacity-0" style={{ animation: 'fade-in-up 0.5s ease-out 150ms forwards' }}>
+      <section
+        data-testid="unlocks-section"
+        className="glass-card-elevated mb-4 p-4 opacity-0"
+        style={{ animation: "fade-in-up 0.5s ease-out 150ms forwards" }}
+      >
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">🔓 Unlocks</span>
         </div>
@@ -264,10 +307,11 @@ const Profile = () => {
           {unlockFeatures.map(feat => (
             <div
               key={feat.id}
+              data-testid={`unlock-feature-${feat.id}`}
               className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
                 feat.unlocked ? "glass-card" : "glass-card opacity-60"
               }`}
-              style={!feat.unlocked ? { filter: 'blur(0.5px)' } : undefined}
+              style={!feat.unlocked ? { filter: "blur(0.5px)" } : undefined}
             >
               <span className="text-lg">{feat.icon}</span>
               <div className="flex-1">
@@ -284,22 +328,35 @@ const Profile = () => {
         </div>
       </section>
 
-      <AccordionSection icon={Shield} title="Privacy Controls" color="accent" delay="200ms">
-        <ToggleRow label="Share location" description="Let friends see when you're nearby" defaultOn />
-        <ToggleRow label="Memory tracking" description="Build context from your conversations" defaultOn />
-        <ToggleRow label="Activity insights" description="Track patterns like focus hours and movement" defaultOn />
+      <AccordionSection
+        icon={Shield}
+        title="Privacy Controls"
+        color="accent"
+        delay="200ms"
+        testId="privacy-section"
+      >
+        <ToggleRow label="Share location" description="Let friends see when you're nearby" defaultOn testId="toggle-share-location" />
+        <ToggleRow label="Memory tracking" description="Build context from your conversations" defaultOn testId="toggle-memory-tracking" />
+        <ToggleRow label="Activity insights" description="Track patterns like focus hours and movement" defaultOn testId="toggle-activity-insights" />
       </AccordionSection>
 
-      <AccordionSection icon={Brain} title="AI Settings" color="secondary" delay="250ms">
-        <ToggleRow label="Smart suggestions" description="AI recommends actions based on context" defaultOn />
-        <ToggleRow label="Ghost mode replies" description="AI drafts replies you can approve" />
-        <ToggleRow label="Voice note summaries" description="Auto-generate text from voice messages" defaultOn />
+      <AccordionSection
+        icon={Brain}
+        title="AI Settings"
+        color="secondary"
+        delay="250ms"
+        testId="ai-settings-section"
+      >
+        <ToggleRow label="Smart suggestions" description="AI recommends actions based on context" defaultOn testId="toggle-smart-suggestions" />
+        <ToggleRow label="Ghost mode replies" description="AI drafts replies you can approve" testId="toggle-ghost-mode" />
+        <ToggleRow label="Voice note summaries" description="Auto-generate text from voice messages" defaultOn testId="toggle-voice-summaries" />
       </AccordionSection>
 
       <button
-        onClick={() => toast({ title: "Signed out", description: "You have been logged out" })}
+        data-testid="button-sign-out"
+        onClick={handleSignOut}
         className="w-full glass-card-elevated p-4 flex items-center justify-between opacity-0 group"
-        style={{ animation: 'fade-in-up 0.5s ease-out 300ms forwards' }}
+        style={{ animation: "fade-in-up 0.5s ease-out 300ms forwards" }}
       >
         <div className="flex items-center gap-3">
           <LogOut className="w-4 h-4 text-destructive" />

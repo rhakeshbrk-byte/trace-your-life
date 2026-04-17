@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Sparkles } from "lucide-react";
 
 const moods = [
   { id: "grinding", label: "Grinding", emoji: "⚡", desc: "Focused & driven" },
@@ -51,6 +51,12 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
     goNext();
   };
 
+  const handleSkipUsername = () => {
+    setUsernameError("");
+    setUsername("");
+    goNext();
+  };
+
   const toggleMood = (id: string) => {
     setSelectedMoods(prev => {
       const next = new Set(prev);
@@ -70,6 +76,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
   return (
     <div
       className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-background overflow-hidden"
+      data-testid="onboarding-screen"
     >
       {/* Aurora background */}
       <div className="aurora-bg">
@@ -87,10 +94,11 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
         }}
       >
         {/* Progress dots */}
-        <div className="flex items-center justify-center gap-2 mb-10">
+        <div className="flex items-center justify-center gap-2 mb-10" data-testid="onboarding-progress">
           {Array.from({ length: STEP_COUNT }).map((_, i) => (
             <div
               key={i}
+              data-testid={`onboarding-dot-${i}`}
               className="rounded-full transition-all duration-400"
               style={{
                 width: i === step ? "24px" : "8px",
@@ -110,13 +118,20 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
         {step === 0 && (
           <div className="flex flex-col items-center text-center gap-6" style={{ animation: "fade-in-up 0.4s ease-out forwards" }}>
             <div
-              className="w-20 h-20 rounded-3xl gradient-primary btn-glow flex items-center justify-center"
+              className="w-20 h-20 rounded-3xl overflow-hidden btn-glow"
               style={{ animation: "fab-pulse 3s ease-in-out infinite" }}
             >
-              <Sparkles className="w-9 h-9 text-white" />
+              <img
+                src="/stardust-logo.png"
+                alt="StarDust"
+                className="w-full h-full object-cover"
+                data-testid="img-onboarding-logo"
+              />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to StarDust</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2" data-testid="text-onboarding-welcome-title">
+                Welcome to StarDust
+              </h1>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 A space to express yourself freely — no follower counts, no algorithms, just real moments and real moods.
               </p>
@@ -140,6 +155,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             </div>
 
             <button
+              data-testid="button-onboarding-get-started"
               onClick={goNext}
               className="w-full py-4 rounded-2xl gradient-primary btn-glow text-white font-bold text-base haptic-press flex items-center justify-center gap-2 mt-2"
             >
@@ -179,6 +195,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               >
                 <span className="text-muted-foreground text-sm font-medium select-none">@</span>
                 <input
+                  data-testid="input-username"
                   autoFocus
                   value={username}
                   onChange={e => {
@@ -198,7 +215,11 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               </div>
 
               {usernameError && (
-                <p className="text-xs text-red-400 px-1" style={{ animation: "fade-in-up 0.2s ease-out forwards" }}>
+                <p
+                  data-testid="text-username-error"
+                  className="text-xs text-red-400 px-1"
+                  style={{ animation: "fade-in-up 0.2s ease-out forwards" }}
+                >
                   {usernameError}
                 </p>
               )}
@@ -208,6 +229,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             </div>
 
             <button
+              data-testid="button-username-continue"
               onClick={handleUsernameNext}
               disabled={username.trim().length < 3}
               className="w-full py-4 rounded-2xl gradient-primary btn-glow text-white font-bold text-base haptic-press flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
@@ -217,7 +239,8 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             </button>
 
             <button
-              onClick={goNext}
+              data-testid="button-username-skip"
+              onClick={handleSkipUsername}
               className="text-center text-xs text-muted-foreground/60 haptic-press hover:text-muted-foreground transition-colors"
             >
               Skip for now
@@ -238,13 +261,15 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-2.5" data-testid="mood-picker-grid">
               {moods.map((m, i) => {
                 const isSelected = selectedMoods.has(m.id);
                 return (
                   <button
                     key={m.id}
+                    data-testid={`button-mood-${m.id}`}
                     onClick={() => toggleMood(m.id)}
+                    aria-pressed={isSelected}
                     className="p-4 rounded-2xl text-left haptic-press transition-all duration-250"
                     style={{
                       animation: `fade-in-up 0.3s ease-out ${i * 50}ms forwards`,
@@ -280,6 +305,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             </div>
 
             <button
+              data-testid="button-enter-stardust"
               onClick={handleFinish}
               disabled={selectedMoods.size === 0}
               className="w-full py-4 rounded-2xl gradient-primary btn-glow text-white font-bold text-base haptic-press flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
@@ -294,6 +320,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
             </button>
 
             <button
+              data-testid="button-skip-moods"
               onClick={handleFinish}
               className="text-center text-xs text-muted-foreground/60 haptic-press hover:text-muted-foreground transition-colors"
             >

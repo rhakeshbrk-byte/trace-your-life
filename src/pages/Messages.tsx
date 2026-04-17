@@ -21,7 +21,7 @@ const Messages = () => {
   );
 
   return (
-    <div className="px-4 pt-4 pb-4 max-w-lg mx-auto relative">
+    <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto relative" data-testid="messages-page">
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-foreground">Messages</h1>
       </header>
@@ -29,6 +29,7 @@ const Messages = () => {
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
+          data-testid="input-search-messages"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search conversations..."
@@ -36,52 +37,74 @@ const Messages = () => {
         />
       </div>
 
-      <div className="space-y-2">
-        {filtered.map((convo, i) => (
-          <button
-            key={convo.id}
-            onClick={() => navigate(`/messages/${convo.id}`)}
-            className="w-full glass-card-elevated p-4 flex items-center gap-3 text-left opacity-0 group"
-            style={{ animation: `fade-in-up 0.5s ease-out ${i * 80}ms forwards` }}
-          >
-            <div
-              className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all duration-300 group-hover:scale-110 ${
-                convo.avatarColor === "primary"
-                  ? "bg-primary/20 text-primary"
-                  : "bg-secondary/20 text-secondary"
-              }`}
+      {filtered.length === 0 ? (
+        <div
+          data-testid="messages-empty-state"
+          className="flex flex-col items-center justify-center py-20 gap-4 opacity-0"
+          style={{ animation: "fade-in-up 0.4s ease-out forwards" }}
+        >
+          <div className="w-16 h-16 rounded-full glass-card flex items-center justify-center">
+            <MessageCircle className="w-7 h-7 text-muted-foreground" />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-foreground">No conversations found</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {search ? `No results for "${search}"` : "Start a new conversation below"}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((convo, i) => (
+            <button
+              key={convo.id}
+              data-testid={`convo-item-${convo.id}`}
+              onClick={() => navigate(`/messages/${convo.id}`)}
+              className="w-full glass-card-elevated p-4 flex items-center gap-3 text-left opacity-0 group haptic-press"
+              style={{ animation: `fade-in-up 0.5s ease-out ${i * 80}ms forwards` }}
             >
-              {convo.initials}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-0.5">
-                <span className="text-sm font-semibold text-foreground">{convo.name}</span>
-                <span className="text-[10px] text-muted-foreground shrink-0">{convo.lastMessageTime}</span>
+              <div
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-all duration-300 group-hover:scale-110 ${
+                  convo.avatarColor === "primary"
+                    ? "bg-primary/20 text-primary"
+                    : "bg-secondary/20 text-secondary"
+                }`}
+              >
+                {convo.initials}
               </div>
-              <p className="text-xs text-muted-foreground truncate">{convo.lastMessage}</p>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                {convo.contextTags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary/80"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-0.5">
+                  <span data-testid={`text-convo-name-${convo.id}`} className="text-sm font-semibold text-foreground">{convo.name}</span>
+                  <span className="text-[10px] text-muted-foreground shrink-0">{convo.lastMessageTime}</span>
+                </div>
+                <p className="text-xs text-muted-foreground truncate">{convo.lastMessage}</p>
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  {convo.contextTags.slice(0, 2).map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary/80"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            {convo.unread > 0 && (
-              <div className="w-5 h-5 rounded-full gradient-primary flex items-center justify-center shrink-0" style={{ animation: 'glow-breathe 2s ease-in-out infinite' }}>
-                <span className="text-[10px] font-bold text-foreground">{convo.unread}</span>
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
+              {convo.unread > 0 && (
+                <div
+                  data-testid={`badge-unread-${convo.id}`}
+                  className="w-5 h-5 rounded-full gradient-primary flex items-center justify-center shrink-0"
+                  style={{ animation: "glow-breathe 2s ease-in-out infinite" }}
+                >
+                  <span className="text-[10px] font-bold text-foreground">{convo.unread}</span>
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* FAB with expandable menu */}
       <div className="fixed bottom-24 right-4 z-40 flex flex-col items-end gap-2">
-        {/* Menu items */}
         {fabMenuItems.map((item, i) => (
           <div
             key={item.label}
@@ -90,27 +113,31 @@ const Messages = () => {
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4 pointer-events-none"
             }`}
-            style={{ transitionDelay: fabOpen ? `${i * 60}ms` : '0ms' }}
+            style={{ transitionDelay: fabOpen ? `${i * 60}ms` : "0ms" }}
           >
             <span className="text-xs font-medium text-foreground glass-card-strong px-3 py-1.5 rounded-full">
               {item.label}
             </span>
             <button
+              data-testid={`button-fab-${item.label.replace(/\s+/g, "-").toLowerCase()}`}
               onClick={() => {
                 toast({ title: item.label, description: item.action });
                 setFabOpen(false);
               }}
-              className="w-10 h-10 rounded-full glass-card-strong flex items-center justify-center btn-glass"
+              className="w-10 h-10 rounded-full glass-card-strong flex items-center justify-center btn-glass haptic-press"
+              aria-label={item.label}
             >
               <item.icon className="w-4 h-4 text-primary" />
             </button>
           </div>
         ))}
 
-        {/* FAB */}
         <button
+          data-testid="button-messages-fab"
           onClick={() => setFabOpen(!fabOpen)}
-          className={`w-14 h-14 rounded-full gradient-primary flex items-center justify-center transition-all duration-300 ${fabOpen ? "" : "fab-pulse"}`}
+          aria-label={fabOpen ? "Close menu" : "New message"}
+          aria-expanded={fabOpen}
+          className={`w-14 h-14 rounded-full gradient-primary flex items-center justify-center transition-all duration-300 haptic-press ${fabOpen ? "" : "fab-pulse"}`}
           style={{ transform: fabOpen ? "rotate(45deg)" : "rotate(0deg)" }}
         >
           {fabOpen ? <X className="w-6 h-6 text-foreground" /> : <Plus className="w-6 h-6 text-foreground" />}
@@ -122,7 +149,7 @@ const Messages = () => {
         <div
           className="fixed inset-0 z-30 bg-background/60 backdrop-blur-sm"
           onClick={() => setFabOpen(false)}
-          style={{ animation: 'fade-in 0.2s ease-out forwards' }}
+          style={{ animation: "fade-in 0.2s ease-out forwards" }}
         />
       )}
     </div>

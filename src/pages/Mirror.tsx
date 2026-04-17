@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Plus, Eye, EyeOff, ChevronRight, Send, Sparkles, ArrowLeft, X, Check, MessageSquare } from "lucide-react";
+import { Users, Plus, Eye, EyeOff, Send, Sparkles, ArrowLeft, X, Check, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const circleMembers = [
@@ -58,16 +58,15 @@ const Mirror = () => {
     setResponseVisibility(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // HOME — viral entry
+  // HOME
   if (screen === "home") {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="mirror-home">
         <header className="mb-6">
           <h1 className="text-xl font-bold text-foreground mb-1">🪞 Mirror</h1>
           <p className="text-xs text-muted-foreground">See yourself through others' eyes</p>
         </header>
 
-        {/* Viral CTA */}
         <div
           className="glass-card-elevated p-6 text-center mb-6 opacity-0"
           style={{ animation: "fade-in-up 0.5s ease-out forwards" }}
@@ -80,6 +79,7 @@ const Mirror = () => {
             Select 5 people you trust. They answer honest prompts about you. Unlock your personal trait report.
           </p>
           <button
+            data-testid="button-start-mirror"
             onClick={() => setScreen("circle")}
             className="px-6 py-3 rounded-full gradient-primary text-sm font-semibold text-foreground btn-glow haptic-press"
           >
@@ -88,12 +88,15 @@ const Mirror = () => {
           </button>
         </div>
 
-        {/* Quick trait preview */}
         {reportUnlocked && (
           <div className="opacity-0" style={{ animation: "fade-in-up 0.5s ease-out 100ms forwards" }}>
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Traits</span>
-              <button onClick={() => setScreen("report")} className="text-xs text-primary font-medium">
+              <button
+                data-testid="link-full-report"
+                onClick={() => setScreen("report")}
+                className="text-xs text-primary font-medium"
+              >
                 Full Report →
               </button>
             </div>
@@ -101,6 +104,7 @@ const Mirror = () => {
               {sampleTraits.slice(0, 3).map((t, i) => (
                 <button
                   key={t.id}
+                  data-testid={`button-trait-preview-${t.id}`}
                   onClick={() => { setSelectedTrait(t); setScreen("trait"); }}
                   className="glass-card-elevated p-3 text-center opacity-0 haptic-press"
                   style={{ animation: `fade-in-up 0.4s ease-out ${i * 80}ms forwards` }}
@@ -114,11 +118,14 @@ const Mirror = () => {
           </div>
         )}
 
-        {/* Permission circle preview */}
         <div className="mt-6 opacity-0" style={{ animation: "fade-in-up 0.5s ease-out 150ms forwards" }}>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Circle</span>
-            <button onClick={() => setScreen("circle")} className="text-xs text-primary font-medium">
+            <button
+              data-testid="link-manage-circle"
+              onClick={() => setScreen("circle")}
+              className="text-xs text-primary font-medium"
+            >
               Manage →
             </button>
           </div>
@@ -138,8 +145,10 @@ const Mirror = () => {
               </div>
               <p className="text-xs text-muted-foreground flex-1">{circleMembers.length} trusted people</p>
               <button
+                data-testid="button-add-circle-member"
                 onClick={() => toast({ title: "Add People", description: "Invite friends to your Mirror circle" })}
                 className="w-8 h-8 rounded-full btn-glass flex items-center justify-center haptic-press"
+                aria-label="Add people to circle"
               >
                 <Plus className="w-4 h-4 text-primary" />
               </button>
@@ -150,21 +159,27 @@ const Mirror = () => {
     );
   }
 
-  // CIRCLE — select 5 people
+  // CIRCLE
   if (screen === "circle") {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-        <button onClick={() => setScreen("home")} className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="mirror-circle">
+        <button
+          data-testid="button-back-to-mirror-home"
+          onClick={() => setScreen("home")}
+          className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <h2 className="text-lg font-bold text-foreground mb-1">Choose Your Circle</h2>
         <p className="text-xs text-muted-foreground mb-5">Select up to 5 people you trust for honest feedback</p>
 
-        <div className="space-y-2 mb-6">
+        <div className="space-y-2 mb-6" data-testid="circle-member-list">
           {circleMembers.map((m, i) => (
             <button
               key={m.id}
+              data-testid={`button-circle-member-${m.id}`}
               onClick={() => togglePerson(m.id)}
+              aria-pressed={selectedPeople.has(m.id)}
               className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all haptic-press opacity-0 ${
                 selectedPeople.has(m.id) ? "glass-card-elevated border-primary/30" : "glass-card"
               }`}
@@ -184,6 +199,7 @@ const Mirror = () => {
         </div>
 
         <button
+          data-testid="button-add-more-people"
           onClick={() => toast({ title: "Invite sent!", description: "Friends will be added to your circle" })}
           className="w-full py-3 rounded-xl btn-glass text-sm font-medium text-muted-foreground mb-3 haptic-press"
         >
@@ -192,6 +208,7 @@ const Mirror = () => {
 
         {selectedPeople.size >= 1 && (
           <button
+            data-testid="button-send-prompts"
             onClick={() => { setCurrentPrompt(0); setScreen("prompts"); }}
             className="w-full py-3 rounded-xl gradient-primary text-sm font-semibold text-foreground btn-glow haptic-press"
             style={{ animation: "fade-in-up 0.3s ease-out forwards" }}
@@ -203,29 +220,35 @@ const Mirror = () => {
     );
   }
 
-  // PROMPTS — answer / preview prompt cards
+  // PROMPTS
   if (screen === "prompts") {
     const prompt = prompts[currentPrompt];
     const progress = ((currentPrompt + 1) / prompts.length) * 100;
 
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-        <button onClick={() => setScreen("circle")} className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="mirror-prompts">
+        <button
+          data-testid="button-back-to-circle"
+          onClick={() => setScreen("circle")}
+          className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
-        {/* Progress */}
         <div className="mb-6">
           <div className="flex justify-between text-[10px] text-muted-foreground mb-1.5">
             <span>Prompt {currentPrompt + 1} of {prompts.length}</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="h-1 bg-muted/30 rounded-full overflow-hidden">
-            <div className="h-full gradient-primary rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+            <div
+              data-testid="prompt-progress-bar"
+              className="h-full gradient-primary rounded-full transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
 
-        {/* Prompt card */}
         <div
           key={prompt.id}
           className="glass-card-elevated p-6 mb-6 opacity-0"
@@ -234,11 +257,13 @@ const Mirror = () => {
           <p className="text-base font-semibold text-foreground mb-5">{prompt.question}</p>
 
           {prompt.type === "choice" && prompt.options && (
-            <div className="space-y-2">
+            <div className="space-y-2" data-testid="prompt-choice-options">
               {prompt.options.map(opt => (
                 <button
                   key={opt}
+                  data-testid={`button-prompt-option-${opt.toLowerCase().replace(/\s/g, "-")}`}
                   onClick={() => setPromptAnswers(prev => ({ ...prev, [prompt.id]: opt }))}
+                  aria-pressed={promptAnswers[prompt.id] === opt}
                   className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all haptic-press ${
                     promptAnswers[prompt.id] === opt
                       ? "gradient-primary text-foreground btn-glow"
@@ -253,6 +278,7 @@ const Mirror = () => {
 
           {prompt.type === "text" && (
             <input
+              data-testid="input-prompt-text"
               value={promptAnswers[prompt.id] || ""}
               onChange={e => setPromptAnswers(prev => ({ ...prev, [prompt.id]: e.target.value }))}
               placeholder="Type your answer..."
@@ -261,10 +287,10 @@ const Mirror = () => {
           )}
         </div>
 
-        {/* Navigation */}
         <div className="flex gap-3">
           {currentPrompt > 0 && (
             <button
+              data-testid="button-prompt-previous"
               onClick={() => setCurrentPrompt(prev => prev - 1)}
               className="flex-1 py-3 rounded-xl btn-glass text-sm font-medium text-muted-foreground haptic-press"
             >
@@ -272,6 +298,7 @@ const Mirror = () => {
             </button>
           )}
           <button
+            data-testid="button-prompt-next"
             onClick={() => {
               if (currentPrompt < prompts.length - 1) {
                 setCurrentPrompt(prev => prev + 1);
@@ -291,11 +318,15 @@ const Mirror = () => {
     );
   }
 
-  // REPORT — trait summary
+  // REPORT
   if (screen === "report") {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-        <button onClick={() => setScreen("home")} className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="mirror-report">
+        <button
+          data-testid="button-back-to-mirror-from-report"
+          onClick={() => setScreen("home")}
+          className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
@@ -307,7 +338,6 @@ const Mirror = () => {
           <p className="text-xs text-muted-foreground">Based on {selectedPeople.size} responses from your circle</p>
         </div>
 
-        {/* Personality indicators */}
         <div className="glass-card-elevated p-4 mb-4 opacity-0" style={{ animation: "fade-in-up 0.4s ease-out 100ms forwards" }}>
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Personality Mood</span>
           <div className="flex gap-2 mt-3">
@@ -317,11 +347,11 @@ const Mirror = () => {
           </div>
         </div>
 
-        {/* Traits grid */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-4" data-testid="traits-grid">
           {sampleTraits.map((t, i) => (
             <button
               key={t.id}
+              data-testid={`button-trait-${t.id}`}
               onClick={() => { setSelectedTrait(t); setScreen("trait"); }}
               className="glass-card-elevated p-4 text-left opacity-0 haptic-press"
               style={{ animation: `fade-in-up 0.4s ease-out ${(i + 2) * 60}ms forwards` }}
@@ -330,19 +360,17 @@ const Mirror = () => {
                 <span className="text-xl">{t.icon}</span>
                 <span className="text-sm font-semibold text-foreground">{t.label}</span>
               </div>
-              {/* Score bar */}
               <div className="h-1.5 bg-muted/30 rounded-full overflow-hidden mb-1">
                 <div
                   className="h-full gradient-primary rounded-full"
-                  style={{ width: `${t.score}%`, animation: `fade-in 0.8s ease-out ${(i + 2) * 60 + 200}ms forwards` }}
+                  style={{ width: `${t.score}%` }}
                 />
               </div>
-              <p className="text-[10px] text-primary font-medium">{t.score}% match</p>
+              <p data-testid={`text-trait-score-${t.id}`} className="text-[10px] text-primary font-medium">{t.score}% match</p>
             </button>
           ))}
         </div>
 
-        {/* Highlight responses */}
         <div className="glass-card-elevated p-4 opacity-0" style={{ animation: "fade-in-up 0.4s ease-out 500ms forwards" }}>
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 block">💬 Highlighted Responses</span>
           <div className="space-y-2">
@@ -350,7 +378,12 @@ const Mirror = () => {
               <div key={i} className="glass-card px-3 py-2.5 rounded-xl flex items-center justify-between">
                 <p className="text-xs text-foreground/90 italic">"{r}"</p>
                 <div className="flex gap-1 ml-2 shrink-0">
-                  <button onClick={() => toggleVisibility(`highlight-${i}`)} className="p-1 rounded-full btn-glass haptic-press">
+                  <button
+                    data-testid={`button-toggle-visibility-highlight-${i}`}
+                    onClick={() => toggleVisibility(`highlight-${i}`)}
+                    className="p-1 rounded-full btn-glass haptic-press"
+                    aria-label={responseVisibility[`highlight-${i}`] ? "Hide response" : "Show response"}
+                  >
                     {responseVisibility[`highlight-${i}`] ? <EyeOff className="w-3 h-3 text-muted-foreground" /> : <Eye className="w-3 h-3 text-muted-foreground" />}
                   </button>
                 </div>
@@ -365,8 +398,12 @@ const Mirror = () => {
   // TRAIT DETAIL
   if (screen === "trait" && selectedTrait) {
     return (
-      <div className="px-4 pt-4 pb-4 max-w-lg mx-auto">
-        <button onClick={() => setScreen("report")} className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press">
+      <div className="px-4 pt-4 pb-4 max-w-2xl mx-auto" data-testid="mirror-trait-detail">
+        <button
+          data-testid="button-back-to-report"
+          onClick={() => setScreen("report")}
+          className="flex items-center gap-1 text-xs text-muted-foreground mb-4 haptic-press"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
@@ -376,10 +413,11 @@ const Mirror = () => {
           <p className="text-sm text-primary font-semibold">{selectedTrait.score}% of your circle sees this</p>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2" data-testid="trait-responses-list">
           {selectedTrait.responses.map((r, i) => (
             <div
               key={i}
+              data-testid={`trait-response-${i}`}
               className="glass-card-elevated p-4 flex items-center justify-between opacity-0"
               style={{ animation: `fade-in-up 0.4s ease-out ${i * 80}ms forwards` }}
             >
@@ -389,18 +427,20 @@ const Mirror = () => {
               </div>
               <div className="flex gap-1 ml-2 shrink-0">
                 <button
+                  data-testid={`button-visibility-trait-${i}`}
                   onClick={() => toggleVisibility(`trait-${selectedTrait.id}-${i}`)}
                   className="p-1.5 rounded-full btn-glass haptic-press"
-                  title={responseVisibility[`trait-${selectedTrait.id}-${i}`] ? "Hidden" : "Visible"}
+                  aria-label={responseVisibility[`trait-${selectedTrait.id}-${i}`] ? "Show response" : "Hide response"}
                 >
                   {responseVisibility[`trait-${selectedTrait.id}-${i}`]
                     ? <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />
                     : <Eye className="w-3.5 h-3.5 text-muted-foreground" />}
                 </button>
                 <button
+                  data-testid={`button-request-edit-${i}`}
                   onClick={() => toast({ title: "Edit requested", description: "The person will be asked to update this response" })}
                   className="p-1.5 rounded-full btn-glass haptic-press"
-                  title="Request edit"
+                  aria-label="Request edit"
                 >
                   <Send className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
