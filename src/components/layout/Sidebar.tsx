@@ -1,5 +1,6 @@
 import { Home, MessageCircle, Users, User, Zap, Radio, GitBranch, Sparkles } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import logoImage from "../../assets/images/stardust-logo.png";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/" },
@@ -31,8 +32,8 @@ const Sidebar = ({ onPostClick }: SidebarProps) => {
       {/* Logo */}
       <div className="p-6 pb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl gradient-primary btn-glow flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-xl overflow-hidden gradient-primary btn-glow flex items-center justify-center">
+            <img src={logoImage} alt="StarDust logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <h1 className="text-base font-bold text-foreground leading-none">StarDust</h1>
